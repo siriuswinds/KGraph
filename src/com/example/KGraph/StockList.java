@@ -23,6 +23,7 @@ public class StockList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stockview);
         dbmgr = new DBManager(this);
+		//dbmgr.deleteStockDays();
 
         m_stocklist = (ListView)findViewById(R.id.stocklist);
         m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {

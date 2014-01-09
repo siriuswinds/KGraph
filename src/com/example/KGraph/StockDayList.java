@@ -25,12 +25,12 @@ public class StockDayList extends Activity implements OnScrollListener{
     private DBManager dbMgr;
     private ArrayList<Map<String,String>> list;
 	private Calendar m_currentDate;
-	private SimpleDateFormat m_sdf1;
-	private SimpleDateFormat m_sdf2;
+	private SimpleDateFormat m_sdf;
 	
     List<StockDay> m_downlowdStocks = null;
     SimpleAdapter adapter;
     String stockcode;
+	String urlcode;
     String stockurl = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
 
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,9 @@ public class StockDayList extends Activity implements OnScrollListener{
         dbMgr = new DBManager(this);
 
         if(Integer.parseInt(code)<600000)
-            code = "1"+code;
+            urlcode = "1"+code;
         else
-            code = "0"+code;
+            urlcode = "0"+code;
 
         m_stockdaylist = (ListView)findViewById(R.id.stockdaylist);
 		//scrollInfo=(Button)findViewById(R.id.scroll_info);
@@ -81,8 +81,7 @@ public class StockDayList extends Activity implements OnScrollListener{
 		m_stockdaylist.addFooterView(footer,null,false);
 		m_stockdaylist.setOnScrollListener(this);
 		
-		m_sdf1=new SimpleDateFormat("yyyyMmdd");
-	    m_sdf2=new SimpleDateFormat("yyyy-MM-dd");
+		m_sdf=new SimpleDateFormat("yyyy-MM-dd");
 		
 		m_currentDate= Calendar.getInstance();
 		
@@ -112,17 +111,20 @@ public class StockDayList extends Activity implements OnScrollListener{
 	}
 	
 	private void loadStockDays(){
-		String cn1=m_sdf1.format(m_currentDate.getTime());
-		String cn2=m_sdf2.format(m_currentDate.getTime());
+		String cn1=m_sdf.format(m_currentDate.getTime());
+		String cn2=cn1.replace("-",""); //m_sdf2.format(m_currentDate.getTime());
+		m_currentDate.add(Calendar.DATE,-1);
 		
-		m_currentDate.add(Calendar.MONTH,-1);
+		for(int i=0;i<50;i++){
+		   m_currentDate.add(Calendar.DATE,-1);
+		}
 
-		String cs1=m_sdf1.format(m_currentDate.getTime());
-		String cs2=m_sdf2.format(m_currentDate.getTime());
+		String cs1=m_sdf.format(m_currentDate.getTime());
+		String cs2=cs1.replace("-","");//m_sdf2.format(m_currentDate.getTime());
 
-        stockurl = String.format(stockurl,stockcode,cs1,cn1);
+        stockurl = String.format(stockurl,urlcode,cs2,cn2);
 
-        loadStockDays(stockcode.substring(1),cs2,cn2);
+        loadStockDays(stockcode,cs1,cn1);
 	}
 
     private void loadStockDays(String code,String startdate,String enddate){
@@ -131,8 +133,10 @@ public class StockDayList extends Activity implements OnScrollListener{
 
         if(m_downlowdStocks == null || m_downlowdStocks.size() ==0)
             ThreadPoolUtils.execute(new MyRunnable());
-        else
+        else{
             loadStockList(m_downlowdStocks);
+			adapter.notifyDataSetChanged();
+		}
     }
 
     private void loadStockList(List<StockDay> stocks){
@@ -140,7 +144,6 @@ public class StockDayList extends Activity implements OnScrollListener{
         list.clear();
 		
 		//new AlertDialog.Builder(this).setMessage(stocks.get(0).TRANSDATE).show();
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         for (StockDay stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
