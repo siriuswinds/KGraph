@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by yangj on 13-12-13.
  */
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "/storage/sdcard1/stocks/stock.db";
+    private static final String DATABASE_NAME = "/storage/sdcard0/stocks/stock.db";
     private static final int DATABASE_VERSION = 1;
 
     public DBHelper(Context context){

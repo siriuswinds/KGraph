@@ -53,10 +53,10 @@ public class StockDayList extends Activity implements OnScrollListener{
 
         m_stockdaylist = (ListView)findViewById(R.id.stockdaylist);
 		//scrollInfo=(Button)findViewById(R.id.scroll_info);
-		header=getLayoutInflater().inflate(R.layout.simple_text,null);
-		((TextView)header.findViewById(R.id.text1)).setText("头部");
-		footer=getLayoutInflater().inflate(R.layout.simple_text,null);
-		((TextView)footer.findViewById(R.id.text1)).setText("尾部");
+		//header=getLayoutInflater().inflate(R.layout.simple_text,null);
+		//((TextView)header.findViewById(R.id.text1)).setText("头部");
+		//footer=getLayoutInflater().inflate(R.layout.simple_text,null);
+		//((TextView)footer.findViewById(R.id.text1)).setText("尾部");
         m_stockdaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -76,10 +76,10 @@ public class StockDayList extends Activity implements OnScrollListener{
         list = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","tclose","chg","pchg","TURNOVER","VOTURNOVER"},new int[]{R.id.txtDate,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTURNOVER,R.id.txtVOTURNOVER});
         
-		m_stockdaylist.addHeaderView(header,null,false);
+		//m_stockdaylist.addHeaderView(header,null,false);
 		m_stockdaylist.setAdapter(adapter);
-		m_stockdaylist.addFooterView(footer,null,false);
-		m_stockdaylist.setOnScrollListener(this);
+		//m_stockdaylist.addFooterView(footer,null,false);
+		//m_stockdaylist.setOnScrollListener(this);
 		
 		m_sdf=new SimpleDateFormat("yyyy-MM-dd");
 		

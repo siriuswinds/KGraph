@@ -46,7 +46,7 @@ public class StockDay {
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             try{
                 //File sdCardDir = Environment.getExternalStorageDirectory();//获取SDCard目录
-File fs = new File("/storage/sdcard1/stocks/stocks.csv");
+File fs = new File("/storage/sdcard0/stocks/stocklist.csv");
                 FileInputStream inputStream = new FileInputStream(fs);// context.openFileInput(sdCardDir.getPath() + "/stocks/stocks.csv");
 
                 byte[] bytes = new byte[1024];

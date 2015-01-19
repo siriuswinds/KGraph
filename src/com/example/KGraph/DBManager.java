@@ -154,7 +154,7 @@ public class DBManager {
     }
 
     public Cursor queryTheStockCursor(){
-        Cursor c = db.rawQuery("select * from STOCK where code in(?,?,?)",new String[]{"300036","002666","002395"});
+        Cursor c = db.rawQuery("select * from STOCK",null);
         return c;
     }
 
