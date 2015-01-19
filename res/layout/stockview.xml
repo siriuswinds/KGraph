@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <ListView android:id="@+id/stocklist" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
 		android:layout_width="fill_parent" android:layout_height="wrap_content" >
 		<Button android:id="@+id/buttonPrePage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonPrePage"></Button>
 		<Button android:id="@+id/buttonNextPage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonNextPage"></Button>
