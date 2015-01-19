@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">KGraph</string>
+	<string name="buttonPrePage">前一页</string>
+	<string name="buttonNextPage">后一页</string>
 </resources>
