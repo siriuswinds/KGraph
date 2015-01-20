@@ -9,7 +9,13 @@
         android:layout_weight="1.16"></ListView>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:gravity="right">
+        android:gravity="right"
+        android:weightSum="1">
+        <EditText
+            android:id="@+id/txtSearchCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.97" />
         <Button android:id="@+id/buttonPrePage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonPrePage"></Button>
         <Button android:id="@+id/buttonNextPage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonNextPage"></Button>
     </LinearLayout>

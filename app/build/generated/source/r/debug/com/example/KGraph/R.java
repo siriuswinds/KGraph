@@ -14,8 +14,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int buttonNextPage=0x7f050016;
-        public static final int buttonPrePage=0x7f050015;
+        public static final int buttonNextPage=0x7f050017;
+        public static final int buttonPrePage=0x7f050016;
         public static final int stockdaylist=0x7f05000e;
         public static final int stockdetaillist=0x7f050007;
         public static final int stocklist=0x7f050014;
@@ -32,6 +32,7 @@ public final class R {
         public static final int txtPrice=0x7f050002;
         public static final int txtPriceCHG=0x7f050003;
         public static final int txtRegion=0x7f050012;
+        public static final int txtSearchCode=0x7f050015;
         public static final int txtStockCode=0x7f05000f;
         public static final int txtStockName=0x7f050010;
         public static final int txtTCLOSE=0x7f050009;

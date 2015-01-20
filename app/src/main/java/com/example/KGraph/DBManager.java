@@ -154,9 +154,9 @@ public class DBManager {
      * 查询数据库股票数
      * @return
      */
-    public int queryStockCount(){
+    public int queryStockCount(String query){
         int result = 0;
-        Cursor c = db.rawQuery("select count(*) from STOCK",null);
+        Cursor c = db.rawQuery("select count(*) from STOCK where code like '?%'",new String[]{query});
         while(c.moveToNext()){
             result = c.getInt(0);
         }
@@ -167,9 +167,9 @@ public class DBManager {
      * 查询数据库内股票代码
      * @return
      */
-    public List<StockDay> queryStock(int index,int count){
+    public List<StockDay> queryStock(int index,int count,String query){
         ArrayList<StockDay> stocks = new ArrayList<StockDay>();
-        Cursor c = queryTheStockCursor(index,count);
+        Cursor c = queryTheStockCursor(index,count,query);
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
         while (c.moveToNext()){
@@ -191,8 +191,8 @@ public class DBManager {
         return stocks;
     }
 
-    public Cursor queryTheStockCursor(int index,int count){
-        Cursor c = db.rawQuery("select * from STOCK limit ?,?",new String[]{Integer.toString(index),Integer.toString(count)});
+    public Cursor queryTheStockCursor(int index,int count,String query){
+        Cursor c = db.rawQuery("select * from STOCK where code like '?%' limit ?,?",new String[]{query,Integer.toString(index),Integer.toString(count)});
         return c;
     }
 
