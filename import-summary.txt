@@ -1,0 +1,91 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gitignore
+* .idea\
+* .idea\.name
+* .idea\compiler.xml
+* .idea\copyright\
+* .idea\copyright\profiles_settings.xml
+* .idea\encodings.xml
+* .idea\misc.xml
+* .idea\modules.xml
+* .idea\scopes\
+* .idea\scopes\scope_settings.xml
+* .idea\vcs.xml
+* .idea\workspace.xml
+* KGraph.apk
+* KGraph.iml
+* LICENSE
+* README
+* README.md
+* ant.properties
+* build.xml
+* out\
+* out\production\
+* out\production\KGraph\
+* out\production\KGraph\KGraph.apk
+* out\production\KGraph\com\
+* out\production\KGraph\com\example\
+* out\production\KGraph\com\example\KGraph\
+* out\production\KGraph\com\example\KGraph\BuildConfig.class
+* out\production\KGraph\com\example\KGraph\DBHelper.class
+* out\production\KGraph\com\example\KGraph\DBManager.class
+* out\production\KGraph\com\example\KGraph\DayGraph.class
+* out\production\KGraph\com\example\KGraph\FavoriteStocks.class
+* out\production\KGraph\com\example\KGraph\HttpClientHelper.class
+* out\production\KGraph\com\example\KGraph\KGraph.class
+* out\production\KGraph\com\example\KGraph\MyActivity$KGraphView.class
+* out\production\KGraph\com\example\KGraph\MyActivity.class
+* out\production\KGraph\com\example\KGraph\R$attr.class
+* out\production\KGraph\com\example\KGraph\R$drawable.class
+* out\production\KGraph\com\example\KGraph\R$id.class
+* out\production\KGraph\com\example\KGraph\R$layout.class
+* out\production\KGraph\com\example\KGraph\R$string.class
+* out\production\KGraph\com\example\KGraph\R.class
+* out\production\KGraph\com\example\KGraph\StockDay.class
+* out\production\KGraph\com\example\KGraph\StockDayDeal.class
+* out\production\KGraph\com\example\KGraph\StockDayDetails$1.class
+* out\production\KGraph\com\example\KGraph\StockDayDetails$MyHandler.class
+* out\production\KGraph\com\example\KGraph\StockDayDetails$MyRunnable.class
+* out\production\KGraph\com\example\KGraph\StockDayDetails.class
+* out\production\KGraph\com\example\KGraph\StockDayList$1.class
+* out\production\KGraph\com\example\KGraph\StockDayList$MyHandler.class
+* out\production\KGraph\com\example\KGraph\StockDayList$MyRunnable.class
+* out\production\KGraph\com\example\KGraph\StockDayList.class
+* out\production\KGraph\com\example\KGraph\StockDayTransactions.class
+* out\production\KGraph\com\example\KGraph\StockList$1.class
+* out\production\KGraph\com\example\KGraph\StockList.class
+* out\production\KGraph\com\example\KGraph\ThreadPoolUtils$1.class
+* out\production\KGraph\com\example\KGraph\ThreadPoolUtils.class
+* proguard-project.txt
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app\src\main\AndroidManifest.xml
+* res\ => app\src\main\res\
+* src\ => app\src\main\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
