@@ -23,7 +23,7 @@ public class StockList extends Activity {
     private SimpleAdapter adapter;
     private Button mBtnPrePage,mBtnNextPage;
     private EditText mtxtSearchCode;
-    private int mPageIndex = 0,mLineCount = 10,mPageCount = 0;
+    private int mPageIndex = 0,mLineCount = 12,mPageCount = 0;
     private ArrayList<Map<String,String>> mList;
     private String mQuery="";
 
@@ -32,32 +32,13 @@ public class StockList extends Activity {
         setContentView(R.layout.stockview);
         dbmgr = new DBManager(this);
 
-        mtxtSearchCode = (EditText)findViewById(R.id.txtSearchCode);
-        mtxtSearchCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mQuery = editable.toString();
-                loadStockList(0,mLineCount,mQuery);
-            }
-        });
-
         mBtnPrePage=(Button)findViewById(R.id.buttonPrePage);
         mBtnPrePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mPageIndex>0){
                     --mPageIndex;
-                    loadStockList(mPageIndex*mLineCount,mLineCount,mQuery);
+                    loadStockList(mPageIndex*mLineCount,mLineCount);
                 }
             }
         });
@@ -68,7 +49,7 @@ public class StockList extends Activity {
             public void onClick(View view) {
                 if(mPageIndex<mPageCount-1){
                     ++mPageIndex;
-                    loadStockList(mPageIndex*mLineCount,mLineCount,mQuery);
+                    loadStockList(mPageIndex*mLineCount,mLineCount);
                 }
             }
         });
@@ -91,7 +72,7 @@ public class StockList extends Activity {
         mList = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,mList,R.layout.stocklist,new String[]{"code","name","industry","region"},new int[]{R.id.txtStockCode,R.id.txtStockName,R.id.txtIndustry,R.id.txtRegion});
         m_stocklist.setAdapter(adapter);
-        loadStockList(mPageIndex,mLineCount,"");
+        loadStockList(mPageIndex,mLineCount);
     }
 
     @Override
@@ -100,16 +81,16 @@ public class StockList extends Activity {
         dbmgr.closeDB();
     }
 
-    public void loadStockList(int index,int count,String query){
-        List<StockDay> stocks = dbmgr.queryStock(index,count,query);
-        mPageCount = dbmgr.queryStockCount(query);
+    public void loadStockList(int index,int count){
+        List<StockDay> stocks = dbmgr.queryStock(index,count);
+        mPageCount = dbmgr.queryStockCount();
 
         //如果本地数据库没有数据，从本地文件读取，并写入数据库
         if(stocks==null || stocks.size()==0){
             List<StockDay> stocks1 = StockDay.ReadFromFile(this.getApplicationContext());
             dbmgr.addStock(stocks1);
             mPageCount = stocks1.size();
-            stocks = dbmgr.queryStock(index,count,query);
+            stocks = dbmgr.queryStock(index,count);
         }
 
         if(stocks!=null && stocks.size()>0) {
