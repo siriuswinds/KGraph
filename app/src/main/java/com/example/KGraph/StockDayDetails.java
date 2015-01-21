@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import org.apache.http.HttpResponse;
@@ -27,8 +29,12 @@ public class StockDayDetails extends Activity {
 	private DBManager dbmgr;
     private MyHandler myHandler;
     private ArrayList<Map<String,String>> list;
+    private Button mbtnPrePage;
+    private Button mbtnNextPage;
+    private int mPageIndex = 0,mLineCount = 50,mPageCount = 0;
     private String mStockCode;
     private String mTransDate;
+
     List<StockDayDeal> m_downlowdStockDayDeals = null;
     SimpleAdapter adapter;
     String stockurl = "http://market.finance.sina.com.cn/downxls.php?date=%1$s&symbol=%2$s";
@@ -38,6 +44,26 @@ public class StockDayDetails extends Activity {
         setContentView(R.layout.stockdaydetailview);
 
         m_stockdetaillist = (ListView)findViewById(R.id.stockdetaillist);
+        mbtnPrePage = (Button)findViewById(R.id.btnPrePage);
+        mbtnPrePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mPageIndex>0){
+                    --mPageIndex;
+                    loadStockTransactions(mPageIndex*mLineCount,mLineCount);
+                }
+            }
+        });
+        mbtnNextPage = (Button)findViewById(R.id.btnNextPage);
+        mbtnNextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mPageIndex<mPageCount-1){
+                    ++mPageIndex;
+                    loadStockTransactions(mPageIndex*mLineCount,mLineCount);
+                }
+            }
+        });
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -64,18 +90,26 @@ public class StockDayDetails extends Activity {
         m_stockdetaillist.setAdapter(adapter);
         //date = date.substring(0,4) + "-" + date.substring(4,2) +"-"+date.substring(6);
         stockurl = String.format(stockurl,date,code);
-		
-		loadStockTransactions();
+
+        initStockTransactions(mPageIndex,mLineCount);
     }
-	
-	private void loadStockTransactions(){
-		m_downlowdStockDayDeals = dbmgr.queryStockDeals(mStockCode,mTransDate);
-		
-		if(m_downlowdStockDayDeals==null ||m_downlowdStockDayDeals.size()==0){
-		   ThreadPoolUtils.execute(new MyRunnable());
-		}else{
-			loadStockDealList(m_downlowdStockDayDeals);
-		}
+
+    private void initStockTransactions(int index,int count){
+        m_downlowdStockDayDeals = dbmgr.queryStockDeals(mStockCode,mTransDate,index,count);
+        mPageCount = dbmgr.queryStockDealsCount(mStockCode,mTransDate);
+
+        if(m_downlowdStockDayDeals==null ||m_downlowdStockDayDeals.size()==0){
+            ThreadPoolUtils.execute(new MyRunnable());
+        }else{
+            loadStockDealList(m_downlowdStockDayDeals);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+	private void loadStockTransactions(int index,int count){
+		m_downlowdStockDayDeals = dbmgr.queryStockDeals(mStockCode,mTransDate,index,count);
+		loadStockDealList(m_downlowdStockDayDeals);
+        adapter.notifyDataSetChanged();
 	}
 
 	public void loadStockDealList(List<StockDayDeal> deals){
@@ -113,15 +147,14 @@ public class StockDayDetails extends Activity {
                 if(result != null){
                     m_downlowdStockDayDeals = StockDayDeal.parse(result,mStockCode,mTransDate);
                     dbmgr.addStockDayDeal(m_downlowdStockDayDeals);
+                    mPageCount = m_downlowdStockDayDeals.size();
                 }
 
-                loadStockDealList(m_downlowdStockDayDeals);
+                loadStockDealList(m_downlowdStockDayDeals.subList(mPageIndex,mLineCount));
 
                 Message msg = myHandler.obtainMessage();
                 msg.what = StockDayDetails.MyHandler.FINISH_DOWNLOAD_MESSAGE;
                 myHandler.sendMessage(msg);
-				
-				dbmgr.addStockDayDeal(m_downlowdStockDayDeals);
             }catch (Exception ex){
                 System.out.println(ex.getMessage());
             }

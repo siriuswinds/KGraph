@@ -14,10 +14,10 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int btnNextPage=0x7f050009;
         public static final int btnNextYear=0x7f050014;
+        public static final int btnPrePage=0x7f050008;
         public static final int btnPreYear=0x7f050013;
-        public static final int button=0x7f050008;
-        public static final int button2=0x7f050009;
         public static final int buttonNextPage=0x7f05001d;
         public static final int buttonPrePage=0x7f05001c;
         public static final int stockdaylist=0x7f050012;

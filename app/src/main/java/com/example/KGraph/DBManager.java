@@ -106,9 +106,9 @@ public class DBManager {
      * @param date
      * @return
      */
-	public List<StockDayDeal> queryStockDeals(String code,String date){
+	public List<StockDayDeal> queryStockDeals(String code,String date,int index,int count){
 		ArrayList<StockDayDeal> deals = new ArrayList<StockDayDeal>();
-		Cursor c = queryTheDealCursor(code,date);
+		Cursor c = queryTheDealCursor(code,date,index,count);
 		while(c.moveToNext()){
 			StockDayDeal deal = new StockDayDeal();
 			deal.DealAmount=c.getFloat(c.getColumnIndex("DEALAMOUNT"));
@@ -123,6 +123,35 @@ public class DBManager {
 		}
 		return deals;
 	}
+
+    /**
+     *
+     * @param code
+     * @param date
+     * @param index
+     * @param count
+     * @return
+     */
+    public Cursor queryTheDealCursor(String code,String date,int index,int count){
+        Cursor c=db.rawQuery("select * from stockdaydeal where code=? and transdate=date(?) order by dealtime asc limit ?,?",new String[]{code,date,String.valueOf(index),String.valueOf(count)});
+        return c;
+    }
+    /**
+     * 查询某日分笔成交记录数
+     * @param code
+     * @param date
+     * @return
+     */
+    public int queryStockDealsCount(String code,String date){
+        int result = 0;
+
+        Cursor c =  db.rawQuery("select count(*) from stockdaydeal where code=? and transdate=date(?)",new String[]{code,date});
+
+        while(c.moveToNext()){
+            result = c.getInt(0);
+        }
+        return result;
+    }
 
     /**
      * 从数据库内读取某股一段时间内的日成交数据
@@ -220,12 +249,7 @@ public class DBManager {
         Cursor c = db.rawQuery("select * from STOCKDAY where CODE=? and transdate>=date(?) and transdate<=date(?) order by transdate desc",new String[]{code,startdate,enddate});
         return c;
     }
-	
-	public Cursor queryTheDealCursor(String code,String date){
-		Cursor c=db.rawQuery("select * from stockdaydeal where code=? and transdate=date(?) order by dealtime asc",new String[]{code,date});
-		return c;
-	}
-	
+
 	public Date getlastStockday(String code){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date dt = null;

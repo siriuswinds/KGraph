@@ -13,17 +13,16 @@
         android:layout_gravity="bottom"
         android:gravity="left"
         android:weightSum="1">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上一页"
+            android:id="@+id/btnPrePage" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button2" />
+            android:text="下一页"
+            android:id="@+id/btnNextPage" />
     </LinearLayout>
 </LinearLayout>
