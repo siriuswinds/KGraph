@@ -89,7 +89,7 @@ public class StockList extends Activity {
             }
         });
         mList = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,mList,R.layout.stocklist,new String[]{"code","name","industry","region"},new int[]{R.id.txtStockCode,R.id.txtStockName,R.id.txtIndustry,R.id.txtRegion});
+        adapter = new SimpleAdapter(this,mList,R.layout.stocklist,new String[]{"code","name","industry","region","price","open","high","low","chg","phg"},new int[]{R.id.txtStockCode,R.id.txtStockName,R.id.txtIndustry,R.id.txtRegion,R.id.txtPrice,R.id.txtOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtCHG,R.id.txtPHG});
         m_stocklist.setAdapter(adapter);
         initStockList(mPageIndex,mLineCount);
     }
@@ -129,8 +129,18 @@ public class StockList extends Activity {
                 map.put("code", stock.CODE);
                 map.put("industry", stock.INDUSTRY);
                 map.put("region", stock.REGION);
+                map.put("price","");
+                map.put("open","");
+                map.put("high","");
+                map.put("close","");
+                map.put("chg","");
+                map.put("phg","");
                 mList.add(map);
             }
+            //http://hq.sinajs.cn/?_=0.9504842679016292&list=sh601988,sh000001
+            //http://hq.sinajs.cn/rn=1421287988869&list=s_sh600030,s_sz002736,s_sh601766,s_sh601669,s_sh600795,s_sh601899
+            //http://qt.gtimg.cn/r=0.7385807468090206q=s_sh601398,s_sh601328,s_sh601288,s_sh600036,s_sh601818,s_sh601939
+            //http://api.money.126.net/data/feed/0000001,0601988,hk04601,money.api?callback=_ntes_quote_callback809987
             adapter.notifyDataSetChanged();
         }
     }

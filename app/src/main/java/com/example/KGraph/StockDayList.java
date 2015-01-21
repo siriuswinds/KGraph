@@ -7,6 +7,7 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import java.text.*;
+import java.text.ParseException;
 import java.util.*;
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
@@ -27,6 +28,7 @@ public class StockDayList extends Activity{
 	private SimpleDateFormat m_sdf;
     private int mYearIndex;
     private int mYearCurr;
+    private String[] WeekName = new String[]{"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 	
     List<StockDay> m_downlowdStocks = null;
     SimpleAdapter adapter;
@@ -73,7 +75,7 @@ public class StockDayList extends Activity{
         });
 
         list = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","tclose","chg","pchg","TOPEN","HIGH","LOW","LCLOSE"},new int[]{R.id.txtDate,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtLCLOSE});
+        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW});
 		m_stockdaylist.setAdapter(adapter);
 
         mbtnPreYear = (Button)findViewById(R.id.btnPreYear);
@@ -90,7 +92,7 @@ public class StockDayList extends Activity{
         mbtnNextYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mYearIndex<mYearCurr){
+                if (mYearIndex < mYearCurr) {
                     ++mYearIndex;
                     loadStockDays();
                 }
@@ -128,13 +130,22 @@ public class StockDayList extends Activity{
         for (StockDay stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
+            try {
+                Date dt = m_sdf.parse(stock.TRANSDATE);
+                Calendar c = Calendar.getInstance();
+                c.setTime(dt);
+                int week = c.get(Calendar.DAY_OF_WEEK);
+                map.put("week",WeekName[week-1]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             map.put("tclose",String.format("%.2f",stock.TCLOSE));
             map.put("chg",String.format("%.2f",stock.CHG));
-            map.put("pchg",String.format("%1$.2f",stock.PCHG));
+            map.put("pchg",String.format("%1$.2f",stock.PCHG).concat("%"));
             map.put("TOPEN",String.format("%.2f",stock.TOPEN));
             map.put("HIGH",String.format("%.2f",stock.HIGH));
             map.put("LOW",String.format("%.2f",stock.LOW));
-            map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
+            //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
             list.add(map);
         }
     }
