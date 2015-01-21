@@ -16,22 +16,24 @@ import org.apache.http.util.*;
 /**
  * Created by yangj on 13-12-16.
  */
-public class StockDayList extends Activity implements OnScrollListener{
+public class StockDayList extends Activity{
     private ListView m_stockdaylist;
-	private View header,footer;
-	private Button scrollInfo;
+    private Button mbtnPreYear,mbtnNextYear;
 	private Thread currentThread;
     private MyHandler myHandler;
     private DBManager dbMgr;
     private ArrayList<Map<String,String>> list;
 	private Calendar m_currentDate;
 	private SimpleDateFormat m_sdf;
+    private int mYearIndex;
+    private int mYearCurr;
 	
     List<StockDay> m_downlowdStocks = null;
     SimpleAdapter adapter;
     String stockcode;
 	String urlcode;
-    String stockurl = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+    String urltpl = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+    String stockurl;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,23 +42,20 @@ public class StockDayList extends Activity implements OnScrollListener{
         Bundle bundle = intent.getExtras();
         stockcode = bundle.getString("STOCKCODE");
         String code = stockcode;
-
         this.setTitle(code);
-
         myHandler = new MyHandler();
         dbMgr = new DBManager(this);
+
+        m_sdf=new SimpleDateFormat("yyyy-MM-dd");
+        m_currentDate= Calendar.getInstance();
+        mYearIndex = m_currentDate.get(Calendar.YEAR);
+        mYearCurr = mYearIndex;
 
         if(Integer.parseInt(code)<600000)
             urlcode = "1"+code;
         else
             urlcode = "0"+code;
-
         m_stockdaylist = (ListView)findViewById(R.id.stockdaylist);
-		//scrollInfo=(Button)findViewById(R.id.scroll_info);
-		//header=getLayoutInflater().inflate(R.layout.simple_text,null);
-		//((TextView)header.findViewById(R.id.text1)).setText("头部");
-		//footer=getLayoutInflater().inflate(R.layout.simple_text,null);
-		//((TextView)footer.findViewById(R.id.text1)).setText("尾部");
         m_stockdaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -74,61 +73,44 @@ public class StockDayList extends Activity implements OnScrollListener{
         });
 
         list = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","tclose","chg","pchg","TURNOVER","VOTURNOVER"},new int[]{R.id.txtDate,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTURNOVER,R.id.txtVOTURNOVER});
-        
-		//m_stockdaylist.addHeaderView(header,null,false);
+        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","tclose","chg","pchg","TOPEN","HIGH","LOW","LCLOSE"},new int[]{R.id.txtDate,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtLCLOSE});
 		m_stockdaylist.setAdapter(adapter);
-		//m_stockdaylist.addFooterView(footer,null,false);
-		//m_stockdaylist.setOnScrollListener(this);
-		
-		m_sdf=new SimpleDateFormat("yyyy-MM-dd");
-		
-		m_currentDate= Calendar.getInstance();
-		
+
+        mbtnPreYear = (Button)findViewById(R.id.btnPreYear);
+        mbtnNextYear = (Button)findViewById(R.id.btnNextYear);
+        mbtnPreYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mYearIndex>1990){
+                    --mYearIndex;
+                    loadStockDays();
+                }
+            }
+        });
+        mbtnNextYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mYearIndex<mYearCurr){
+                    ++mYearIndex;
+                    loadStockDays();
+                }
+            }
+        });
+
         loadStockDays();
     }
-	
-	@Override
-	public void onScrollStateChanged(AbsListView view,int scrollState){
-		switch(scrollState){
-			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-			case OnScrollListener.SCROLL_STATE_FLING:
-				if(view.getLastVisiblePosition()>=view.getCount()-2){
-					if(currentThread==null||!currentThread.isAlive()){
-						m_stockdaylist.addFooterView(footer,null,false);
-						loadStockDays();
-					}
-				}
-				break;
-			case OnScrollListener.SCROLL_STATE_IDLE:
-				break;
-		}
-	}
-	
-	@Override
-	public void onScroll(AbsListView view,int firstVisibleItem,int visibleItemCount,int totalItemCount){
-		
-	}
-	
+
 	private void loadStockDays(){
-		String cn1=m_sdf.format(m_currentDate.getTime());
-		String cn2=cn1.replace("-",""); //m_sdf2.format(m_currentDate.getTime());
-		m_currentDate.add(Calendar.DATE,-1);
-		
-		for(int i=0;i<50;i++){
-		   m_currentDate.add(Calendar.DATE,-1);
-		}
-
-		String cs1=m_sdf.format(m_currentDate.getTime());
-		String cs2=cs1.replace("-","");//m_sdf2.format(m_currentDate.getTime());
-
-        stockurl = String.format(stockurl,urlcode,cs2,cn2);
-
+        String Year = String.valueOf(mYearIndex);
+        String cn1 = Year.concat("-12-31");
+        String cs1 = Year.concat("-01-01");
+        String cn2 = Year.concat("1231");
+        String cs2 = Year.concat("0101");
+        stockurl = String.format(urltpl,urlcode,cs2,cn2);
         loadStockDays(stockcode,cs1,cn1);
 	}
 
     private void loadStockDays(String code,String startdate,String enddate){
-		//Date day= dbMgr.getlastStockday(code);
         m_downlowdStocks = dbMgr.queryStockDay(code,startdate,enddate);
 
         if(m_downlowdStocks == null || m_downlowdStocks.size() ==0)
@@ -146,11 +128,13 @@ public class StockDayList extends Activity implements OnScrollListener{
         for (StockDay stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
-            map.put("tclose",String.valueOf(stock.TCLOSE));
-            map.put("chg",String.valueOf(stock.CHG));
+            map.put("tclose",String.format("%.2f",stock.TCLOSE));
+            map.put("chg",String.format("%.2f",stock.CHG));
             map.put("pchg",String.format("%1$.2f",stock.PCHG));
-            map.put("TURNOVER",String.format("%1$.2f",stock.TURNOVER));
-            map.put("VOTURNOVER",String.format("%1$.2f",stock.VOTURNOVER/10000.0));
+            map.put("TOPEN",String.format("%.2f",stock.TOPEN));
+            map.put("HIGH",String.format("%.2f",stock.HIGH));
+            map.put("LOW",String.format("%.2f",stock.LOW));
+            map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
             list.add(map);
         }
     }

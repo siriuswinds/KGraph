@@ -16,6 +16,16 @@ public class DBManager {
     public DBManager(Context context){
         helper = new DBHelper(context);
         db = helper.getWritableDatabase();
+        //clearData();
+    }
+
+    /**
+     * 清理数据
+     */
+    private void clearData(){
+        deleteStocks();
+        deleteStockDays();
+        deleteStockDayDeals();
     }
 
     /**
@@ -154,9 +164,15 @@ public class DBManager {
      * 查询数据库股票数
      * @return
      */
-    public int queryStockCount(){
+    public int queryStockCount(String cnd){
         int result = 0;
-        Cursor c = db.rawQuery("select count(*) from STOCK",null);
+        Cursor c = null;
+
+        if(cnd.length()>0)
+            c = db.rawQuery("select count(*) from STOCK where code like ?",new String[]{"%" + cnd + "%"});
+        else
+            c = db.rawQuery("select count(*) from STOCK",null);
+
         while(c.moveToNext()){
             result = c.getInt(0);
         }
@@ -167,9 +183,9 @@ public class DBManager {
      * 查询数据库内股票代码
      * @return
      */
-    public List<StockDay> queryStock(int index,int count){
+    public List<StockDay> queryStock(int index,int count,String cnd){
         ArrayList<StockDay> stocks = new ArrayList<StockDay>();
-        Cursor c = queryTheStockCursor(index,count);
+        Cursor c = queryTheStockCursor(index,count,cnd);
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
         while (c.moveToNext()){
@@ -191,8 +207,12 @@ public class DBManager {
         return stocks;
     }
 
-    public Cursor queryTheStockCursor(int index,int count){
-        Cursor c = db.rawQuery("select * from STOCK limit ?,?",new String[]{Integer.toString(index),Integer.toString(count)});
+    public Cursor queryTheStockCursor(int index,int count,String cnd){
+        Cursor c = null;
+        if(cnd.length()>0)
+            c = db.rawQuery("select * from STOCK where code like ? limit ?,?",new String[]{"%"+cnd+"%",Integer.toString(index),Integer.toString(count)});
+        else
+            c = db.rawQuery("select * from STOCK limit ?,?",new String[]{Integer.toString(index),Integer.toString(count)});
         return c;
     }
 
@@ -206,14 +226,20 @@ public class DBManager {
 		return c;
 	}
 	
-	public Date getlastStockday(String code){	
-	    Date dt=null;
-		Cursor c= db.rawQuery("select TRANSDATE from stockday where code=? order by transdate desc limit 1",new String[]{code});
-		String transdate = c.getString(c.getColumnIndex("TRANSDATE"));
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try
-		{
-			dt=sdf.parse(transdate);
+	public Date getlastStockday(String code){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt = null;
+
+        try
+        {
+            dt = sdf.parse("1990-01-01");
+            Cursor c= db.rawQuery("select TRANSDATE from stockday where code=? order by transdate desc limit 1",new String[]{code});
+            c.moveToNext();
+
+            if(c.getCount()>0) {
+                String transdate = c.getString(c.getColumnIndex("TRANSDATE"));
+                dt = sdf.parse(transdate);
+            }
 		}
 		catch (ParseException e)
 		{}
