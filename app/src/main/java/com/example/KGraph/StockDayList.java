@@ -80,7 +80,7 @@ public class StockDayList extends Activity{
 
         mbtnPreYear = (Button)findViewById(R.id.btnPreYear);
         mbtnNextYear = (Button)findViewById(R.id.btnNextYear);
-        mbtnPreYear.setOnClickListener(new View.OnClickListener() {
+        mbtnNextYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mYearIndex>1990){
@@ -90,7 +90,7 @@ public class StockDayList extends Activity{
                 }
             }
         });
-        mbtnNextYear.setOnClickListener(new View.OnClickListener() {
+        mbtnPreYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mYearIndex < mYearCurr) {

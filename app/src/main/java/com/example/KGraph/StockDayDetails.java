@@ -33,7 +33,7 @@ public class StockDayDetails extends Activity {
     private Button mbtnNextPage;
     private Button mbtnRefresh;
     private Button mbtnReturn;
-    private int mPageIndex = 0,mLineCount = 50,mPageCount = 0;
+    private int mPageIndex = 0,mLineCount = 11,mPageCount = 0;
     private String mStockCode;
     private String mTransDate;
 
