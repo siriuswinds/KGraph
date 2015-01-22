@@ -127,12 +127,12 @@ public class StockDayList extends Activity{
 	}
 
     private void loadStockDays(String code,String startdate,String enddate){
-        list.clear();
         m_downlowdStocks = dbMgr.queryStockDay(code,startdate,enddate);
 
         if(m_downlowdStocks == null || m_downlowdStocks.size() ==0)
             ThreadPoolUtils.execute(new MyRunnable());
         else{
+            list.clear();
             loadStockList(m_downlowdStocks);
 			adapter.notifyDataSetChanged();
 		}
@@ -215,9 +215,10 @@ public class StockDayList extends Activity{
 
                 if(result != null){
                     m_downlowdStocks = StockDay.parse(result);
-                    dbMgr.addStockDay(m_downlowdStocks);
-                    if(m_downlowdStocks.size()>0)
+                    if(m_downlowdStocks.size()>0) {
+                        dbMgr.addStockDay(m_downlowdStocks);
                         loadStockList(m_downlowdStocks);
+                    }
                 }
 
                 Message msg = myHandler.obtainMessage();
