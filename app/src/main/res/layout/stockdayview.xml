@@ -21,12 +21,12 @@
             android:text="返回"
             android:id="@+id/btnReturn" />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="前一年"
             android:id="@+id/btnPreYear" />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="后一年"
             android:id="@+id/btnNextYear" />

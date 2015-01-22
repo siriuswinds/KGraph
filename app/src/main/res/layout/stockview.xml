@@ -16,13 +16,13 @@
         android:layout_gravity="bottom"
         android:gravity="left">
 
-        <Button android:id="@+id/buttonPrePage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonPrePage"></Button>
+        <Button android:id="@+id/buttonPrePage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/buttonPrePage"></Button>
 
-        <Button android:id="@+id/buttonNextPage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonNextPage"></Button>
+        <Button android:id="@+id/buttonNextPage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/buttonNextPage"></Button>
 
         <EditText
             android:id="@+id/txtSearchCode"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:inputType="number" />
 

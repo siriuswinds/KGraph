@@ -86,6 +86,7 @@ public class StockDayList extends Activity{
                 if(mYearIndex>1990){
                     --mYearIndex;
                     loadStockDays();
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -95,6 +96,7 @@ public class StockDayList extends Activity{
                 if (mYearIndex < mYearCurr) {
                     ++mYearIndex;
                     loadStockDays();
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -113,7 +115,9 @@ public class StockDayList extends Activity{
                 updateStockDays();
             }
         });
+
         loadStockDays();
+        adapter.notifyDataSetChanged();
     }
 
 	private void loadStockDays(){
@@ -132,9 +136,7 @@ public class StockDayList extends Activity{
         if(m_downlowdStocks == null || m_downlowdStocks.size() ==0)
             ThreadPoolUtils.execute(new MyRunnable());
         else{
-            list.clear();
             loadStockList(m_downlowdStocks);
-			adapter.notifyDataSetChanged();
 		}
     }
 
@@ -174,6 +176,7 @@ public class StockDayList extends Activity{
      * @param stocks
      */
     private void loadStockList(List<StockDay> stocks){
+        list.clear();
         for (StockDay stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
@@ -217,7 +220,7 @@ public class StockDayList extends Activity{
                     m_downlowdStocks = StockDay.parse(result);
                     if(m_downlowdStocks.size()>0) {
                         dbMgr.addStockDay(m_downlowdStocks);
-                        loadStockList(m_downlowdStocks);
+                        loadStockDays();
                     }
                 }
 
