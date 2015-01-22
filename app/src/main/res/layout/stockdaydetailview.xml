@@ -16,13 +16,27 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="返回"
+            android:id="@+id/btnReturn" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="上一页"
             android:id="@+id/btnPrePage" />
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="下一页"
             android:id="@+id/btnNextPage" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刷新"
+            android:id="@+id/btnRefresh" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="统计"
+            android:id="@+id/btnStatistic" />
     </LinearLayout>
 </LinearLayout>

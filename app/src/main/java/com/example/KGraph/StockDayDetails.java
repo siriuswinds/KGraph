@@ -31,6 +31,8 @@ public class StockDayDetails extends Activity {
     private ArrayList<Map<String,String>> list;
     private Button mbtnPrePage;
     private Button mbtnNextPage;
+    private Button mbtnRefresh;
+    private Button mbtnReturn;
     private int mPageIndex = 0,mLineCount = 50,mPageCount = 0;
     private String mStockCode;
     private String mTransDate;
@@ -42,8 +44,24 @@ public class StockDayDetails extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stockdaydetailview);
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+
+        String code = bundle.getString("STOCKCODE");
+        String date = bundle.getString("TRANSDATE");
+        this.setTitle(code + " " + date);
+        mStockCode = code;
+        mTransDate = date;
+        if(Integer.parseInt(code)<600000)
+            code = "sz"+code;
+        else
+            code = "sh"+code;
+        stockurl = String.format(stockurl,date,code);
+        myHandler = new MyHandler();
+        dbmgr=new DBManager(this);
 
         m_stockdetaillist = (ListView)findViewById(R.id.stockdetaillist);
+
         mbtnPrePage = (Button)findViewById(R.id.btnPrePage);
         mbtnPrePage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,33 +82,26 @@ public class StockDayDetails extends Activity {
                 }
             }
         });
-
-        Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-
-        String code = bundle.getString("STOCKCODE");
-        String date = bundle.getString("TRANSDATE");
-
-        mStockCode = code;
-        mTransDate = date;
-
-        this.setTitle(code + " " + date);
-
-        myHandler = new MyHandler();
-		dbmgr=new DBManager(this);
-
-        if(Integer.parseInt(code)<600000)
-            code = "sz"+code;
-        else
-            code = "sh"+code;
+        mbtnRefresh = (Button)findViewById(R.id.btnRefresh);
+        mbtnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbmgr.deleteStockDayDeals(mStockCode,mTransDate);
+                initStockTransactions(mPageIndex,mLineCount);
+            }
+        });
+        mbtnReturn = (Button)findViewById(R.id.btnReturn);
+        mbtnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+        });
 
         list = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,list,R.layout.stockdaydetaillist,new String[]{"成交时间","成交价","价格变动","成交量","成交额","性质"},new int[]{R.id.txtDealTime,R.id.txtPrice,R.id.txtPriceCHG,R.id.txtDealCount,R.id.txtDealAmount,R.id.txtDealType});
-
         m_stockdetaillist.setAdapter(adapter);
-        //date = date.substring(0,4) + "-" + date.substring(4,2) +"-"+date.substring(6);
-        stockurl = String.format(stockurl,date,code);
-
         initStockTransactions(mPageIndex,mLineCount);
     }
 

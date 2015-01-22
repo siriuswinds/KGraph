@@ -19,7 +19,7 @@ import org.apache.http.util.*;
  */
 public class StockDayList extends Activity{
     private ListView m_stockdaylist;
-    private Button mbtnPreYear,mbtnNextYear;
+    private Button mbtnPreYear,mbtnNextYear,mbtnReturn,mbtnRefresh;
 	private Thread currentThread;
     private MyHandler myHandler;
     private DBManager dbMgr;
@@ -75,7 +75,7 @@ public class StockDayList extends Activity{
         });
 
         list = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW});
+        adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW","TURNOVER","VATURNOVER"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtTURNOVER,R.id.txtVATURNOVER});
 		m_stockdaylist.setAdapter(adapter);
 
         mbtnPreYear = (Button)findViewById(R.id.btnPreYear);
@@ -98,7 +98,21 @@ public class StockDayList extends Activity{
                 }
             }
         });
-
+        mbtnReturn = (Button)findViewById(R.id.btnReturn);
+        mbtnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+        });
+        mbtnRefresh = (Button)findViewById(R.id.btnRefresh);
+        mbtnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateStockDays();
+            }
+        });
         loadStockDays();
     }
 
@@ -113,6 +127,7 @@ public class StockDayList extends Activity{
 	}
 
     private void loadStockDays(String code,String startdate,String enddate){
+        list.clear();
         m_downlowdStocks = dbMgr.queryStockDay(code,startdate,enddate);
 
         if(m_downlowdStocks == null || m_downlowdStocks.size() ==0)
@@ -123,10 +138,42 @@ public class StockDayList extends Activity{
 		}
     }
 
-    private void loadStockList(List<StockDay> stocks){
-        //加载到listview
-        list.clear();
+    /**
+     * 更新日数据库
+     */
+    private void updateStockDays(){
+        Date lastdate = dbMgr.getlastStockday(stockcode);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(lastdate);
+        int lastyear = cal.get(Calendar.YEAR);
 
+        if(cal.before(m_currentDate)&&(lastyear == m_currentDate.get(Calendar.YEAR))){
+            String cn1 = m_sdf.format(m_currentDate.getTime());
+            cal.add(Calendar.DATE,1);
+            String cs1 = m_sdf.format(cal.getTime());
+            String cn2 = cn1.replace("-","");
+            String cs2 = cs1.replace("-","");
+            stockurl = String.format(urltpl,urlcode,cs2,cn2);
+            loadStockDays(stockcode,cs1,cn1);
+        }
+
+        if((mYearIndex == lastyear)&&(lastyear<mYearCurr)){
+            cal.add(Calendar.DATE,1);
+            String Year = String.valueOf(mYearIndex);
+            String cn1 = Year.concat("-12-31");
+            String cs1 = m_sdf.format(cal.getTime());
+            String cn2 = Year.concat("1231");
+            String cs2 = cs1.replace("-","");
+            stockurl = String.format(urltpl,urlcode,cs2,cn2);
+            loadStockDays(stockcode,cs1,cn1);
+        }
+    }
+
+    /**
+     * 加载日数据到列表
+     * @param stocks
+     */
+    private void loadStockList(List<StockDay> stocks){
         for (StockDay stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
@@ -145,7 +192,10 @@ public class StockDayList extends Activity{
             map.put("TOPEN",String.format("%.2f",stock.TOPEN));
             map.put("HIGH",String.format("%.2f",stock.HIGH));
             map.put("LOW",String.format("%.2f",stock.LOW));
+            map.put("TURNOVER",String.format("%.2f",stock.TURNOVER).concat("%"));
+            map.put("VATURNOVER",String.format("%.2f",stock.VATURNOVER/100000000));//亿元
             //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
+            //TURNOVER;VOTURNOVER;VATURNOVER
             list.add(map);
         }
     }
@@ -166,9 +216,9 @@ public class StockDayList extends Activity{
                 if(result != null){
                     m_downlowdStocks = StockDay.parse(result);
                     dbMgr.addStockDay(m_downlowdStocks);
+                    if(m_downlowdStocks.size()>0)
+                        loadStockList(m_downlowdStocks);
                 }
-
-                loadStockList(m_downlowdStocks);
 
                 Message msg = myHandler.obtainMessage();
                 msg.what = StockDayDetails.MyHandler.FINISH_DOWNLOAD_MESSAGE;

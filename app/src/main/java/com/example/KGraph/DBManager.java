@@ -28,6 +28,24 @@ public class DBManager {
         deleteStockDayDeals();
     }
 
+    public void deleteStocks(){
+        db.delete("STOCK","",null);
+    }
+
+    public void deleteStockDays(){
+        db.delete("STOCKDAY","",null);
+    }
+
+    public void deleteStockDayDeals(){db.delete("STOCKDAYDEAL","",null);}
+
+    public void deleteOldStockDay(StockDay stock){
+        db.delete("STOCKDAY","CODE=? and TRANSDATE=date(?)",new String[]{stock.CODE,stock.TRANSDATE});
+    }
+
+    public void deleteStockDayDeals(String code, String date) {
+        db.delete("STOCKDAYDEAL","CODE=? and TRANSDATE=date(?)",new String[]{code,date});
+    }
+
     /**
      * 将日内分笔交易数据写入数据库
      * @param deals
@@ -84,20 +102,6 @@ public class DBManager {
         finally {
             db.endTransaction();
         }
-    }
-
-    public void deleteStocks(){
-        db.delete("STOCK","",null);
-    }
-
-    public void deleteStockDays(){
-        db.delete("STOCKDAY","",null);
-    }
-
-    public void deleteStockDayDeals(){db.delete("STOCKDAYDEAL","",null);}
-
-    public void deleteOldStockDay(StockDay stock){
-        db.delete("STOCKDAY","CODE=? and TRANSDATE=date(?)",new String[]{stock.CODE,stock.TRANSDATE});
     }
 
     /**
@@ -274,4 +278,5 @@ public class DBManager {
     public void closeDB(){
         db.close();
     }
+
 }

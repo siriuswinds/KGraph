@@ -23,7 +23,7 @@ public class StockList extends Activity {
     private SimpleAdapter adapter;
     private Button mBtnPrePage,mBtnNextPage;
     private EditText mtxtSearchCode;
-    private int mPageIndex = 0,mLineCount = 12,mPageCount = 0;
+    private int mPageIndex = 0,mLineCount = 14,mPageCount = 0;
     private ArrayList<Map<String,String>> mList;
     private String mQuery="";
 
