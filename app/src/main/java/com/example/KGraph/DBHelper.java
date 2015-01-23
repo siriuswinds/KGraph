@@ -17,9 +17,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
+        //股票列表
         db.execSQL("create table if not exists Stock(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar,NAME varchar,INDUSTRY varchar,REGION varchar,OPENDATE text,LASTDATE text)" );
+        //日线表
         db.execSQL("create table if not exists StockDay(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar,NAME varchar,TRANSDATE text,TCLOSE float,HIGH float,LOW float,TOPEN float,LCLOSE float,CHG float,PCHG float,TURNOVER float,VOTURNOVER float,VATURNOVER float,TCAP float,MCAP float)" );
+        //分笔表
         db.execSQL("create table if not exists StockDayDeal(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar,TRANSDATE text,DEALTIME text,PRICE float,PRICECHANGE varchar,DEALCOUNT float,DEALAMOUNT float,DEALTYPE varchar)");
+        //交易表
+        db.execSQL("create table if not exists StockDeal(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar,TRADEDATE text,TRADETIME text,PRICE float,TURNOVER float,TURNVOLUMN float,TRADETYPE varchar)");
+        //账户表
+        db.execSQL("create table if not exists StockAccount(_id INTEGER PRIMARY KEY AUTOINCREMENT, ASSETS float, BALANCE float, SHARES float)");
+        //自选股
+        db.execSQL("create table if not exists FavoriteStock(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar)");
     }
 
     @Override

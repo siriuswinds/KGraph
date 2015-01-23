@@ -16,6 +16,7 @@ public class DBManager {
     public DBManager(Context context){
         helper = new DBHelper(context);
         db = helper.getWritableDatabase();
+        //helper.onCreate(db);
         //clearData();
     }
 
@@ -279,4 +280,33 @@ public class DBManager {
         db.close();
     }
 
+    public List<StockDay> queryFavorite() {
+        ArrayList<StockDay> stocks = new ArrayList<StockDay>();
+        Cursor c = queryFavoriteCursor();
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+
+        while (c.moveToNext()){
+            StockDay stock = new StockDay();
+
+            stock.CODE = c.getString(c.getColumnIndex("CODE"));
+            stock.NAME = c.getString(c.getColumnIndex("NAME"));
+            stock.INDUSTRY = c.getString(c.getColumnIndex("INDUSTRY"));
+            stock.REGION = c.getString(c.getColumnIndex("REGION"));
+
+            try{
+                stock.OPENDATE = simpleDateFormat.parse(c.getString(c.getColumnIndex("OPENDATE")));
+                stock.LASTDATE = simpleDateFormat.parse(c.getString(c.getColumnIndex("LASTDATE")));
+            }catch (Exception ex){}
+
+            stocks.add(stock);
+        }
+        c.close();
+        return stocks;
+    }
+
+    private Cursor queryFavoriteCursor() {
+        Cursor c=db.rawQuery("select * from Stock limit 0,100",null);
+        //Cursor c=db.rawQuery("select b.* from FavoriteStock as a left join Stock as b on a.code = b.code",null);
+        return c;
+    }
 }

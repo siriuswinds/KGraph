@@ -19,18 +19,39 @@ import java.util.Map;
  */
 public class StockList extends Activity {
     private DBManager dbmgr;
-    private ListView m_stocklist;
     private SimpleAdapter adapter;
-    private Button mBtnPrePage,mBtnNextPage;
+    private ArrayList<Map<String,String>> mList;
+    private ListView m_stocklist;
+    private Button mBtnPrePage,mBtnNextPage,mbtnReturn;
     private EditText mtxtSearchCode;
     private int mPageIndex = 0,mLineCount = 11,mPageCount = 0;
-    private ArrayList<Map<String,String>> mList;
     private String mQuery="";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stockview);
         dbmgr = new DBManager(this);
+
+        mList = new ArrayList<Map<String, String>>();
+        adapter = new SimpleAdapter(this,mList,R.layout.stocklist,new String[]{"code","name","industry","region","price","open","high","low","chg","phg"},new int[]{R.id.txtStockCode,R.id.txtStockName,R.id.txtIndustry,R.id.txtRegion,R.id.txtPrice,R.id.txtOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtCHG,R.id.txtPHG});
+        m_stocklist = (ListView)findViewById(R.id.stocklist);
+        m_stocklist.setAdapter(adapter);
+        m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView mTxtcode = (TextView)view.findViewById(R.id.txtStockCode);
+                String code = mTxtcode.getText().toString();
+                Intent intent = new Intent();
+                intent.setClass(StockList.this,StockDayList.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("STOCKCODE",code);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                mTxtcode = null;
+            }
+        });
+
+        initStockList(mPageIndex,mLineCount);
 
         mtxtSearchCode=(EditText)findViewById(R.id.txtSearchCode);
         mtxtSearchCode.addTextChangedListener(new TextWatcher() {
@@ -73,25 +94,14 @@ public class StockList extends Activity {
             }
         });
 
-        m_stocklist = (ListView)findViewById(R.id.stocklist);
-        m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mbtnReturn = (Button)findViewById(R.id.btnReturn);
+        mbtnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView mTxtcode = (TextView)view.findViewById(R.id.txtStockCode);
-                String code = mTxtcode.getText().toString();
-                Intent intent = new Intent();
-                intent.setClass(StockList.this,StockDayList.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("STOCKCODE",code);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                mTxtcode = null;
+            public void onClick(View view) {
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
-        mList = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,mList,R.layout.stocklist,new String[]{"code","name","industry","region","price","open","high","low","chg","phg"},new int[]{R.id.txtStockCode,R.id.txtStockName,R.id.txtIndustry,R.id.txtRegion,R.id.txtPrice,R.id.txtOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtCHG,R.id.txtPHG});
-        m_stocklist.setAdapter(adapter);
-        initStockList(mPageIndex,mLineCount);
     }
 
     @Override
