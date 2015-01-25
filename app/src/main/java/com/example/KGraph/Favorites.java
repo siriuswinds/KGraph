@@ -3,6 +3,7 @@ package com.example.KGraph;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,18 +39,12 @@ public class Favorites extends Activity {
         m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView mTxtcode = (TextView)view.findViewById(R.id.txtStockCode);
-                String code = mTxtcode.getText().toString();
-                Intent intent = new Intent();
-                intent.setClass(Favorites.this,StockDayList.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("STOCKCODE",code);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                mTxtcode = null;
+                String code  = view.findViewById(R.id.txtStockCode).toString();
+                loadStockDayListActivity(code);
             }
         });
 
+        this.registerForContextMenu(m_stocklist);
         initFavorites();
 
         mbtnReturn = (Button)findViewById(R.id.btnReturn);
@@ -59,6 +55,19 @@ public class Favorites extends Activity {
                 finish();
             }
         });
+    }
+
+    /**
+     * 加载日线数据
+     * @param code
+     */
+    private void loadStockDayListActivity(String code) {
+        Intent intent = new Intent();
+        intent.setClass(Favorites.this,StockDayList.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("STOCKCODE",code);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void initFavorites() {
@@ -87,25 +96,33 @@ public class Favorites extends Activity {
         }
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_favorites, menu);
-        return true;
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo){
+        menu.add(0,1,0,"日线数据");
+        menu.add(0,2,0,"移除自选");
+
+        super.onCreateContextMenu(menu,v,menuInfo);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public boolean onContextItemSelected(MenuItem mi){
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)mi.getMenuInfo();
+        HashMap<String, String> map  = (HashMap<String, String>)adapter.getItem(menuInfo.position);
+        String code = map.get("code");
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (mi.getItemId()){
+            case 1:
+                loadStockDayListActivity(code);
+                break;
+            case 2:
+                dbmgr.removeFavorite(code);
+                Toast.makeText(getApplicationContext(), "已经移除自选", Toast.LENGTH_SHORT).show();
+                initFavorites();
+                break;
         }
-
-        return super.onOptionsItemSelected(item);
+        return super.onContextItemSelected(mi);
     }
+
 }

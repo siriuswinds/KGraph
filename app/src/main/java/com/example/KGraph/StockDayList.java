@@ -19,7 +19,7 @@ import org.apache.http.util.*;
  */
 public class StockDayList extends Activity{
     private ListView m_stockdaylist;
-    private Button mbtnPreYear,mbtnNextYear,mbtnReturn,mbtnRefresh;
+    private Button mbtnPreYear,mbtnNextYear,mbtnReturn,mbtnRefresh,mbtnAddFavorite;
 	private Thread currentThread;
     private MyHandler myHandler;
     private DBManager dbMgr;
@@ -57,6 +57,7 @@ public class StockDayList extends Activity{
             urlcode = "1"+code;
         else
             urlcode = "0"+code;
+
         m_stockdaylist = (ListView)findViewById(R.id.stockdaylist);
         m_stockdaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,6 +74,8 @@ public class StockDayList extends Activity{
                 mTxtDate = null;
             }
         });
+
+        this.registerForContextMenu(m_stockdaylist);
 
         list = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW","TURNOVER","VATURNOVER"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtTURNOVER,R.id.txtVATURNOVER});
@@ -115,9 +118,36 @@ public class StockDayList extends Activity{
                 updateStockDays();
             }
         });
+        mbtnAddFavorite = (Button)findViewById(R.id.btnAddFavorite);
+        mbtnAddFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbMgr.addFavorite(stockcode);
+                Toast.makeText(getApplicationContext(),"已经加入自选股",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         loadStockDays();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo){
+        menu.add(0,1,0,"分笔明细");
+        menu.add(0,2,0,"模拟交易");
+        super.onCreateContextMenu(menu,v,menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem mi){
+        switch (mi.getItemId()){
+            case 0:
+                break;
+            case 1:
+                break;
+        }
+        return super.onContextItemSelected(mi);
     }
 
 	private void loadStockDays(){

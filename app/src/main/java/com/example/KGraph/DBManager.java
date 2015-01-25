@@ -3,6 +3,8 @@ package com.example.KGraph;
 import android.content.*;
 import android.database.*;
 import android.database.sqlite.*;
+import android.util.Log;
+
 import java.text.*;
 import java.util.*;
 
@@ -61,7 +63,7 @@ public class DBManager {
 			}
 			db.setTransactionSuccessful();
 		}catch(Exception ex){
-            System.out.println(ex.getMessage());
+            Log.e("",ex.getMessage());
 		}finally{
 			db.endTransaction();
 		}
@@ -79,7 +81,7 @@ public class DBManager {
             }
             db.setTransactionSuccessful();
         }catch (Exception ex){
-            System.out.println(ex.getMessage());
+            Log.e("",ex.getMessage());
         }
         finally {
             db.endTransaction();
@@ -98,7 +100,7 @@ public class DBManager {
             }
             db.setTransactionSuccessful();
         }catch (Exception ex){
-            System.out.println(ex.getMessage());
+            Log.e("",ex.getMessage());
         }
         finally {
             db.endTransaction();
@@ -231,9 +233,16 @@ public class DBManager {
             stock.REGION = c.getString(c.getColumnIndex("REGION"));
 
             try{
-                stock.OPENDATE = simpleDateFormat.parse(c.getString(c.getColumnIndex("OPENDATE")));
-                stock.LASTDATE = simpleDateFormat.parse(c.getString(c.getColumnIndex("LASTDATE")));
-            }catch (Exception ex){}
+                String sOPEN = c.getString(c.getColumnIndex("OPENDATE"));
+                String sLAST = c.getString(c.getColumnIndex("LASTDATE"));
+
+                if(sOPEN!=null)
+                    stock.OPENDATE = simpleDateFormat.parse(sOPEN);
+                if(sLAST!=null)
+                    stock.LASTDATE = simpleDateFormat.parse(sLAST);
+            }catch (Exception ex){
+                Log.e("日期转换错误",ex.getMessage());
+            }
 
             stocks.add(stock);
         }
@@ -271,7 +280,9 @@ public class DBManager {
             }
 		}
 		catch (ParseException e)
-		{}
+		{
+            Log.e("",e.getMessage());
+        }
 
 		return dt;
 	}
@@ -305,8 +316,42 @@ public class DBManager {
     }
 
     private Cursor queryFavoriteCursor() {
-        Cursor c=db.rawQuery("select * from Stock limit 0,100",null);
-        //Cursor c=db.rawQuery("select b.* from FavoriteStock as a left join Stock as b on a.code = b.code",null);
+        //Cursor c=db.rawQuery("select * from Stock limit 0,100",null);
+        Cursor c=db.rawQuery("select b.* from FavoriteStock as a left join Stock as b on a.code = b.code",null);
         return c;
+    }
+
+    public void addFavorite(String stockcode) {
+        Cursor c = db.rawQuery("select count(*) from FavoriteStock where code = ?",new String[]{stockcode});
+        c.moveToNext();
+        int count = c.getInt(0);
+        c.close();
+        if(count>0) return;
+
+        db.beginTransaction();
+        try {
+            db.execSQL("insert into FavoriteStock values(null,?)", new String[]{stockcode});
+            db.setTransactionSuccessful();
+        }catch (Exception err){
+            Log.e("加入自选错误",err.getMessage());
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * 移除自选股
+     * @param code
+     */
+    public void removeFavorite(String code) {
+        db.beginTransaction();
+        try {
+            db.delete("FavoriteStock","code = ?", new String[]{code});
+            db.setTransactionSuccessful();
+        }catch (Exception err){
+            Log.e("移除自选错误",err.getMessage());
+        }finally {
+            db.endTransaction();
+        }
     }
 }

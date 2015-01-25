@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
@@ -41,18 +44,14 @@ public class StockList extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView mTxtcode = (TextView)view.findViewById(R.id.txtStockCode);
                 String code = mTxtcode.getText().toString();
-                Intent intent = new Intent();
-                intent.setClass(StockList.this,StockDayList.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("STOCKCODE",code);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                openStockListActivity(code);
+
                 mTxtcode = null;
             }
         });
 
-        initStockList(mPageIndex,mLineCount);
-
+        this.registerForContextMenu(m_stocklist);
+        initStockList(mPageIndex, mLineCount);
         mtxtSearchCode=(EditText)findViewById(R.id.txtSearchCode);
         mtxtSearchCode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,6 +101,46 @@ public class StockList extends Activity {
                 finish();
             }
         });
+    }
+
+    /**
+     * 打开日线数据
+     * @param code
+     */
+    private void openStockListActivity(String code) {
+        Intent intent = new Intent();
+        intent.setClass(StockList.this,StockDayList.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("STOCKCODE",code);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo){
+        menu.add(0,1,0,"日线数据");
+        menu.add(0,2,0,"加入自选");
+
+        super.onCreateContextMenu(menu,v,menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem mi){
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)mi.getMenuInfo();
+        HashMap<String, String> map  = (HashMap<String, String>)adapter.getItem(menuInfo.position);
+        String code = map.get("code");
+
+        switch (mi.getItemId()){
+            case 1:
+                openStockListActivity(code);
+                break;
+            case 2:
+                dbmgr.addFavorite(code);
+                Toast.makeText(getApplicationContext(),"已经加入自选股",Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onContextItemSelected(mi);
     }
 
     @Override

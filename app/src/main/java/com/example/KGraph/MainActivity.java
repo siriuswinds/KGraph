@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
-    private Button btnMarket,btnTrade,btnSetting,btnFavorite,btnAccount;
+    private Button btnMarket,btnTrade,btnSetting,btnFavorite,btnAccount,btnExit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
         btnMarket = (Button)findViewById(R.id.btnMarket);
         btnTrade = (Button)findViewById(R.id.btnTrade);
         btnSetting = (Button)findViewById(R.id.btnSetting);
+        btnExit = (Button)findViewById(R.id.btnExit);
 
         btnTrade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +58,13 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this,StockList.class);
                 startActivity(intent);
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
