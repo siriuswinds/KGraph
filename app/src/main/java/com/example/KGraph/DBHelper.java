@@ -26,7 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
         //交易表
         db.execSQL("create table if not exists StockDeal(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar,TRADEDATE text,TRADETIME text,PRICE float,TURNOVER float,TURNVOLUMN float,TRADETYPE varchar)");
         //账户表
-        db.execSQL("create table if not exists StockAccount(_id INTEGER PRIMARY KEY AUTOINCREMENT, ASSETS float, BALANCE float, SHARES float)");
+        db.execSQL("drop table StockAccount");
+        db.execSQL("create table if not exists StockAccount(_id INTEGER PRIMARY KEY AUTOINCREMENT, ASSETS float, CAPITALBALANCE float, AVAILABLEBALANCE float, MARKETVALUE float, SHARES float)");
         //自选股
         db.execSQL("create table if not exists FavoriteStock(_id INTEGER PRIMARY KEY AUTOINCREMENT,CODE varchar)");
     }

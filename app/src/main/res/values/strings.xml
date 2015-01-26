@@ -13,5 +13,8 @@
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_trade">TradeActivity</string>
+    <string name="btnRollOut">转出</string>
+    <string name="btnPayInto">转入</string>
+    <string name="btnReset">重置</string>
 
 </resources>
