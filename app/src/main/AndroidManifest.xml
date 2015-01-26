@@ -31,6 +31,18 @@
             android:name=".Favorites"
             android:label="@string/title_activity_favorites" >
         </activity>
+        <activity
+            android:name=".AccountActivity"
+            android:label="@string/title_activity_account" >
+        </activity>
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting" >
+        </activity>
+        <activity
+            android:name=".TradeActivity"
+            android:label="@string/title_activity_trade" >
+        </activity>
     </application>
 
 </manifest>

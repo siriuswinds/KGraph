@@ -316,7 +316,6 @@ public class DBManager {
     }
 
     private Cursor queryFavoriteCursor() {
-        //Cursor c=db.rawQuery("select * from Stock limit 0,100",null);
         Cursor c=db.rawQuery("select b.* from FavoriteStock as a left join Stock as b on a.code = b.code",null);
         return c;
     }
@@ -353,5 +352,13 @@ public class DBManager {
         }finally {
             db.endTransaction();
         }
+    }
+
+    /**
+     * 更新股票列表
+     * @param stocks
+     */
+    public void updateStocks(List<StockDay> stocks) {
+
     }
 }

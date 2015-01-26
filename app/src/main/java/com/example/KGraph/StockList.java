@@ -25,7 +25,7 @@ public class StockList extends Activity {
     private SimpleAdapter adapter;
     private ArrayList<Map<String,String>> mList;
     private ListView m_stocklist;
-    private Button mBtnPrePage,mBtnNextPage,mbtnReturn;
+    private Button mbtnPrePage,mbtnNextPage,mbtnReturn,mbtnRefresh;
     private EditText mtxtSearchCode;
     private int mPageIndex = 0,mLineCount = 11,mPageCount = 0;
     private String mQuery="";
@@ -42,11 +42,7 @@ public class StockList extends Activity {
         m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView mTxtcode = (TextView)view.findViewById(R.id.txtStockCode);
-                String code = mTxtcode.getText().toString();
-                openStockListActivity(code);
-
-                mTxtcode = null;
+                openStockListActivity(view.findViewById(R.id.txtStockCode).toString());
             }
         });
 
@@ -71,8 +67,8 @@ public class StockList extends Activity {
             }
         });
 
-        mBtnPrePage=(Button)findViewById(R.id.buttonPrePage);
-        mBtnPrePage.setOnClickListener(new View.OnClickListener() {
+        mbtnPrePage=(Button)findViewById(R.id.btnPrePage);
+        mbtnPrePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mPageIndex>0){
@@ -82,8 +78,8 @@ public class StockList extends Activity {
             }
         });
 
-        mBtnNextPage = (Button)findViewById(R.id.buttonNextPage);
-        mBtnNextPage.setOnClickListener(new View.OnClickListener() {
+        mbtnNextPage = (Button)findViewById(R.id.btnNextPage);
+        mbtnNextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mPageIndex<mPageCount-1){
@@ -99,6 +95,14 @@ public class StockList extends Activity {
             public void onClick(View view) {
                 setResult(Activity.RESULT_OK);
                 finish();
+            }
+        });
+
+        mbtnRefresh = (Button)findViewById(R.id.btnRefresh);
+        mbtnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateStocklist();
             }
         });
     }
@@ -192,5 +196,13 @@ public class StockList extends Activity {
             //http://api.money.126.net/data/feed/0000001,0601988,hk04601,money.api?callback=_ntes_quote_callback809987
             adapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 更新股票列表
+     */
+    private void updateStocklist(){
+        List<StockDay> stocks = StockDay.ReadFromFile(this.getApplicationContext());
+        dbmgr.updateStocks(stocks);
     }
 }

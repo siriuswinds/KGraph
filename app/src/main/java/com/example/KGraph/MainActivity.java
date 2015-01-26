@@ -25,14 +25,18 @@ public class MainActivity extends Activity {
         btnTrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,TradeActivity.class);
+                startActivity(intent);
             }
         });
 
         btnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,AccountActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -48,7 +52,9 @@ public class MainActivity extends Activity {
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,SettingActivity.class);
+                startActivity(intent);
             }
         });
 

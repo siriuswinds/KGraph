@@ -14,8 +14,8 @@
         android:gravity="left">
 
         <Button android:id="@+id/btnReturn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/btnReturn"></Button>
-        <Button android:id="@+id/buttonPrePage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/buttonPrePage"></Button>
-        <Button android:id="@+id/buttonNextPage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/buttonNextPage"></Button>
+        <Button android:id="@+id/btnPrePage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnPrePage"></Button>
+        <Button android:id="@+id/btnNextPage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnNextPage"></Button>
     </LinearLayout>
 
 </LinearLayout>
