@@ -14,6 +14,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +41,9 @@ public class Favorites extends Activity {
         m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String code  = view.findViewById(R.id.txtStockCode).toString();
-                loadStockDayListActivity(code);
+                TextView text  =(TextView) view.findViewById(R.id.txtStockCode);
+                loadStockDayListActivity(text.getText().toString());
+                text = null;
             }
         });
 

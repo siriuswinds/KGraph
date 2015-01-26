@@ -42,7 +42,9 @@ public class StockList extends Activity {
         m_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                openStockListActivity(view.findViewById(R.id.txtStockCode).toString());
+                TextView text = (TextView)view.findViewById(R.id.txtStockCode);
+                openStockListActivity(text.getText().toString());
+                text = null;
             }
         });
 
