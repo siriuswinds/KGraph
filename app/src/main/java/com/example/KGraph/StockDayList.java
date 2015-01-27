@@ -3,6 +3,7 @@ package com.example.KGraph;
 import android.app.*;
 import android.content.*;
 import android.os.*;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
@@ -258,7 +259,7 @@ public class StockDayList extends Activity{
                 msg.what = StockDayDetails.MyHandler.FINISH_DOWNLOAD_MESSAGE;
                 myHandler.sendMessage(msg);
             }catch (Exception ex){
-                System.out.println(ex.getMessage());
+                Log.e("下载日线数据",ex.getMessage());
             }
         }
     }

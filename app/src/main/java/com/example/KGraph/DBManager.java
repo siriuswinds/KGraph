@@ -18,6 +18,7 @@ public class DBManager {
     public DBManager(Context context){
         helper = new DBHelper(context);
         db = helper.getWritableDatabase();
+        //deleteTradeRecords();
         //helper.onCreate(db);
         //clearData();
     }
@@ -41,6 +42,8 @@ public class DBManager {
 
     public void deleteStockDayDeals(){db.delete("STOCKDAYDEAL","",null);}
 
+    public void deleteTradeRecords(){db.delete("TRADERECORD","",null);}
+    public void deleteAccount() {db.delete("StockAccount","",null); }
     public void deleteOldStockDay(StockDay stock){
         db.delete("STOCKDAY","CODE=? and TRANSDATE=date(?)",new String[]{stock.CODE,stock.TRANSDATE});
     }
@@ -360,5 +363,103 @@ public class DBManager {
      */
     public void updateStocks(List<StockDay> stocks) {
 
+    }
+
+    /**
+     * 保存资金记录
+     * @param record
+     */
+    public void saveTradeRecord(TradeRecord record) {
+        db.beginTransaction();
+
+        try{
+            switch (record.TradeType)
+            {
+                case PAYINTO:
+                case ROLLOUT:
+                    db.execSQL("insert into TRADERECORD values(null,null,?,null,?,null,?)",new Object[]{Utils.DateFormatter.format(record.TradeTime),record.TurnOver,Utils.TRADETYPETOSTRING(record.TradeType)});
+                    break;
+                case BUY:
+                case SELL:
+                    db.execSQL("insert into TRADERECORD values(null,?,?,?,?,?,?)",new Object[]{record.Code,Utils.DateFormatter.format(record.TradeTime),record.Price,record.TurnOver,record.TurnVolumn,Utils.TRADETYPETOSTRING(record.TradeType)});
+                    break;
+            }
+            db.setTransactionSuccessful();
+        }catch (Exception err){
+            Log.e("保存资金记录",err.getMessage());
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * 从数据库读取交易记录
+     * @return
+     */
+    public List<TradeRecord> getTradeRecords() {
+        ArrayList<TradeRecord> records = new ArrayList<TradeRecord>();
+        Cursor c = db.rawQuery("select * from traderecord order by datetime(tradetime) desc",null);
+
+        while(c.moveToNext()){
+            TradeRecord record = new TradeRecord();
+
+            try {
+                record.TradeTime = Utils.DateFormatter.parse(c.getString(c.getColumnIndex("TRADETIME")));
+            } catch (ParseException e) {
+                Log.e("成交记录",e.getMessage());
+            }
+            record.Price = c.getFloat(c.getColumnIndex("PRICE"));
+            record.TurnOver = c.getFloat(c.getColumnIndex("TURNOVER"));
+            record.TurnVolumn = c.getFloat(c.getColumnIndex("TURNVOLUMN"));
+            record.TradeType  = Utils.STRINGTOTRADETYPE(c.getString(c.getColumnIndex("TRADETYPE")));
+            records.add(record);
+        }
+
+        c.close();
+
+        return records;
+    }
+
+    /**
+     * 从数据库读取账户信息
+     * @return
+     */
+    public Account LoadAccountInfo() {
+        Account result = new Account();
+
+        Cursor c = db.rawQuery("select * from StockAccount",null);
+        c.moveToNext();
+
+        if(c.getCount() > 0){
+            result.ASSETS = c.getFloat(c.getColumnIndex("ASSETS"));
+            result.AVAILABLEBALANCE = c.getFloat(c.getColumnIndex("AVAILABLEBALANCE"));
+            result.CAPITALBALANCE = c.getFloat(c.getColumnIndex("CAPITALBALANCE"));
+            result.MARKETVALUE = c.getFloat(c.getColumnIndex("MARKETVALUE"));
+            result.SHARES = c.getFloat(c.getColumnIndex("SHARES"));
+        }
+
+        c.close();
+        return result;
+    }
+
+    public void saveAccountInfo(Account mAccount) {
+        try {
+            Cursor c = db.rawQuery("select * from StockAccount", null);
+            c.moveToNext();
+            int count = c.getCount();
+            c.close();
+
+            db.beginTransaction();
+            if (count == 0) {
+                db.execSQL("insert into StockAccount values(null,?,?,?,?,?)", new Object[]{mAccount.ASSETS, mAccount.CAPITALBALANCE, mAccount.AVAILABLEBALANCE, mAccount.MARKETVALUE, mAccount.SHARES});
+            } else {
+                db.execSQL("update StockAccount set ASSETS=?,CAPITALBALANCE=?,AVAILABLEBALANCE=?,MARKETVALUE=?,SHARES=?",new Object[]{mAccount.ASSETS, mAccount.CAPITALBALANCE, mAccount.AVAILABLEBALANCE, mAccount.MARKETVALUE, mAccount.SHARES});
+            }
+            db.setTransactionSuccessful();
+        }catch (Exception err){
+            Log.e("更新账户信息",err.getMessage());
+        }finally {
+            db.endTransaction();
+        }
     }
 }
