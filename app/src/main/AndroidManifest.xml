@@ -40,6 +40,10 @@
             android:label="@string/title_activity_setting" >
         </activity>
         <activity
+            android:name=".TradeRecordActivity"
+            android:label="@string/title_activity_trade" >
+        </activity>
+        <activity
             android:name=".TradeActivity"
             android:label="@string/title_activity_trade" >
         </activity>

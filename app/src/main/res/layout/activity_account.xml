@@ -154,8 +154,16 @@
             android:gravity="right"
             android:inputType="numberDecimal"
             android:ems="10"/>
-        <Button android:id="@+id/btnPayInto" android:layout_marginLeft="10dp" android:layout_width="50dp" android:layout_height="wrap_content" android:text="@string/btnPayInto" android:layout_column="2"></Button>
+
     </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:gravity="center_vertical">
+        <Button android:id="@+id/btnPayInto" android:layout_marginLeft="10dp" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnPayInto" android:layout_column="1"></Button>
+
+        </TableRow>
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -181,13 +189,19 @@
             android:gravity="right"
             android:inputType="numberDecimal"
             android:ems="10" />
-        <Button android:id="@+id/btnRollOut" android:layout_marginLeft="10dp"  android:layout_width="50dp" android:layout_height="wrap_content" android:text="@string/btnRollOut" android:layout_column="2"></Button>
     </TableRow>
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         android:gravity="center_vertical">
-        <Button android:id="@+id/btnReset" android:layout_marginLeft="10dp"  android:layout_width="50dp" android:layout_height="wrap_content" android:text="@string/btnReset" android:layout_column="2"></Button>
+        <Button android:id="@+id/btnRollOut" android:layout_marginLeft="10dp"  android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnRollOut" android:layout_column="1"></Button>
+        </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:gravity="center_vertical">
+        <Button android:id="@+id/btnReset" android:layout_marginLeft="10dp"  android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnReset" android:layout_column="1"></Button>
         </TableRow>
 </TableLayout>

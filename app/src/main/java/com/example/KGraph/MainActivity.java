@@ -3,13 +3,11 @@ package com.example.KGraph;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
-    private Button btnMarket,btnTrade,btnSetting,btnFavorite,btnAccount,btnExit;
+    private Button btnMarket,btnTrade,btnTradeRecord,btnSetting,btnFavorite,btnAccount,btnExit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +17,7 @@ public class MainActivity extends Activity {
         btnFavorite = (Button)findViewById(R.id.btnFavorite);
         btnMarket = (Button)findViewById(R.id.btnMarket);
         btnTrade = (Button)findViewById(R.id.btnTrade);
+        btnTradeRecord = (Button)findViewById(R.id.btnTradeRecord);
         btnSetting = (Button)findViewById(R.id.btnSetting);
         btnExit = (Button)findViewById(R.id.btnExit);
 
@@ -27,6 +26,15 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this,TradeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnTradeRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,TradeRecordActivity.class);
                 startActivity(intent);
             }
         });

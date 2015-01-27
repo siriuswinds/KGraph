@@ -65,13 +65,7 @@ public class StockDayList extends Activity{
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView mTxtDate = (TextView)view.findViewById(R.id.txtDate);
                 String date = mTxtDate.getText().toString();
-                Intent intent = new Intent();
-                intent.setClass(StockDayList.this,StockDayDetails.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("STOCKCODE",stockcode);
-                bundle.putString("TRANSDATE",date);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                openStockDayDetials(date);
                 mTxtDate = null;
             }
         });
@@ -132,6 +126,20 @@ public class StockDayList extends Activity{
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * 打开分笔明细列表
+     * @param date
+     */
+    private void openStockDayDetials(String date) {
+        Intent intent = new Intent();
+        intent.setClass(StockDayList.this,StockDayDetails.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("STOCKCODE",stockcode);
+        bundle.putString("TRANSDATE",date);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo){
@@ -142,16 +150,36 @@ public class StockDayList extends Activity{
 
     @Override
     public boolean onContextItemSelected(MenuItem mi){
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)mi.getMenuInfo();
+        HashMap<String, String> map  = (HashMap<String, String>)adapter.getItem(menuInfo.position);
+        String date = map.get("date");
+
         switch (mi.getItemId()){
             case 0:
+                openStockDayDetials(date);
                 break;
             case 1:
+                startStockTrade(date);
                 break;
         }
         return super.onContextItemSelected(mi);
     }
 
-	private void loadStockDays(){
+    /**
+     * 开始模拟交易
+     * @param date
+     */
+    private void startStockTrade(String date) {
+        Intent intent = new Intent();
+        intent.setClass(StockDayList.this,TradeActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("STOCKCODE",stockcode);
+        bundle.putString("TRANSDATE",date);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void loadStockDays(){
         String Year = String.valueOf(mYearIndex);
         String cn1 = Year.concat("-12-31");
         String cs1 = Year.concat("-01-01");

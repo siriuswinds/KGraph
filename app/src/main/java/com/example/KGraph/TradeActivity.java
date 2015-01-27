@@ -6,33 +6,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.widget.EditText;
 
 
 public class TradeActivity extends Activity {
-    private DBManager dbmgr;
-    private SimpleAdapter adapter;
-    private ArrayList<Map<String,String>> mList;
-    private ListView m_tradelist;
-    private Button mbtnPrePage,mbtnNextPage,mbtnReturn,mbtnRefresh;
+    private Button mbtnReturn,mbtnBuy,mbtnSell;
+    private EditText mtxtPrice,mtxtVolumn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
-        dbmgr = new DBManager(this);
 
-        mList = new ArrayList<Map<String, String>>();
-        adapter = new SimpleAdapter(this,mList,R.layout.tradelist,new String[]{"date","time","price","turnover","turnvolumn","tradetype"},new int[]{R.id.txtTradeDate,R.id.txtTradeTime,R.id.txtPrice,R.id.txtTURNOVER,R.id.txtTURNVOLUMN,R.id.txtTRADETYPE});
-        m_tradelist = (ListView)findViewById(R.id.tradelist);
-        m_tradelist.setAdapter(adapter);
-        initTradeList();
+        initMyHoldStocks();
+        initStockGraph();
 
         mbtnReturn = (Button)findViewById(R.id.btnReturn);
         mbtnReturn.setOnClickListener(new View.OnClickListener() {
@@ -42,31 +29,32 @@ public class TradeActivity extends Activity {
                 finish();
             }
         });
-    }
+        mbtnBuy = (Button)findViewById(R.id.btnBuy);
+        mbtnBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-    private void initTradeList() {
-        TradeManager trademgr = new TradeManager(dbmgr);
-        List<TradeRecord> tradeRecords = trademgr.getTradeRecords();
-        loadTradeRecordList(tradeRecords);
-    }
-    private void loadTradeRecordList(List<TradeRecord> traderecords){
-        if(traderecords!=null && traderecords.size()>0) {
-            mList.clear();
-            //加载到listview
-            for (TradeRecord record : traderecords) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("date", Utils.DayFormatter.format(record.TradeTime));
-                map.put("time", Utils.TimeFormatter.format(record.TradeTime));
-                map.put("price", String.format("%.2f",record.Price));
-                map.put("turnover", String.format("%.2f",record.TurnOver));
-                map.put("turnvolumn", String.format("%.0f",record.TurnVolumn));
-                map.put("tradetype",Utils.TRADETYPETOSTRING(record.TradeType));
-
-                mList.add(map);
             }
-            adapter.notifyDataSetChanged();
-        }
+        });
+        mbtnSell = (Button)findViewById(R.id.btnSell);
+        mbtnSell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        mtxtPrice = (EditText)findViewById(R.id.txtPrice);
+        mtxtVolumn = (EditText)findViewById(R.id.txtVolumn);
     }
+
+    private void initStockGraph() {
+
+    }
+
+    private void initMyHoldStocks() {
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
