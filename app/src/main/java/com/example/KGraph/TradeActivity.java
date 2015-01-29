@@ -118,7 +118,7 @@ public class TradeActivity extends Activity {
                 mhandler.sendMessage(msg);
             }
         };
-        mtimer.schedule(mtask,1000,100);
+        mtimer.schedule(mtask,1000,Utils.SPEED);
     }
 
     private void initStockMarket() {
@@ -126,15 +126,13 @@ public class TradeActivity extends Activity {
         mlistMarket.clear();
 
         if(mdeals.size()==0){
-            String url = "";
             mdeals = Utils.downloadDayDeals(dbmgr,mCode,mDate);
-        };
+        }
 
         for(int i = 0;i<mdisplayIndex;i++){
             StockDayDeal deal = mdeals.get(i);
             addMarketItem(deal);
         }
-        //adapterMarket.notifyDataSetChanged();
     }
 
     private void displayMarket() {
@@ -159,6 +157,10 @@ public class TradeActivity extends Activity {
             Date d = Utils.DayFormatter.parse(mDate);
             c.setTime(d);
             c.add(Calendar.DATE,1);
+            if(c.after(Calendar.getInstance())){
+                mtimer.cancel();
+                return;
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
