@@ -110,6 +110,25 @@ public class DBManager {
         }
     }
 
+    public List<StockDayDeal> queryStockDeals(String code, String date) {
+        ArrayList<StockDayDeal> deals = new ArrayList<StockDayDeal>();
+        Cursor c=db.rawQuery("select * from stockdaydeal where code=? and transdate=date(?) order by dealtime asc",new String[]{code,date});
+        while(c.moveToNext()){
+            StockDayDeal deal = new StockDayDeal();
+            deal.DealAmount=c.getFloat(c.getColumnIndex("DEALAMOUNT"));
+            deal.DealCount=c.getInt(c.getColumnIndex("DEALCOUNT"));
+            deal.DealTime=c.getString(c.getColumnIndex("DEALTIME"));
+            deal.DealType=c.getString(c.getColumnIndex("DEALTYPE"));
+            deal.Price=c.getFloat(c.getColumnIndex("PRICE"));
+            deal.PriceChange=c.getString(c.getColumnIndex("PRICECHANGE"));
+            deal.Code=c.getString(c.getColumnIndex("CODE"));
+            deal.TransDate=c.getString(c.getColumnIndex("TRANSDATE"));
+            deals.add(deal);
+        }
+        c.close();
+        return deals;
+    }
+
     /**
      * 从数据库读取某股某日分笔交易明细
      * @param code
@@ -131,6 +150,7 @@ public class DBManager {
 			deal.TransDate=c.getString(c.getColumnIndex("TRANSDATE"));
 			deals.add(deal);
 		}
+        c.close();
 		return deals;
 	}
 
@@ -146,6 +166,7 @@ public class DBManager {
         Cursor c=db.rawQuery("select * from stockdaydeal where code=? and transdate=date(?) order by dealtime asc limit ?,?",new String[]{code,date,String.valueOf(index),String.valueOf(count)});
         return c;
     }
+
     /**
      * 查询某日分笔成交记录数
      * @param code
@@ -160,6 +181,8 @@ public class DBManager {
         while(c.moveToNext()){
             result = c.getInt(0);
         }
+
+        c.close();
         return result;
     }
 
@@ -461,5 +484,26 @@ public class DBManager {
         }finally {
             db.endTransaction();
         }
+    }
+
+    /**
+     * 从数据库获取持股代码、均价、数量
+     * @return
+     */
+    public List<TradeRecord> getHoldStocks() {
+        ArrayList<TradeRecord> stocks = new ArrayList<TradeRecord>();
+        Cursor c = db.rawQuery("select CODE,sum(PRICE*TURNVOLUMN)/sum(TURNVOLUMN) as PRICE,sum(TURNVOLUMN) as VOLUMN from traderecord group by CODE having VOLUMN > 0  ",null);
+
+        while(c.moveToNext()){
+            TradeRecord record = new TradeRecord();
+            record.Code = c.getString(c.getColumnIndex("CODE"));
+            record.Price = c.getFloat(c.getColumnIndex("PRICE"));
+            record.TurnVolumn = c.getFloat(c.getColumnIndex("VOLUMN"));
+            stocks.add(record);
+        }
+
+        c.close();
+
+        return stocks;
     }
 }

@@ -45,8 +45,21 @@ public class TradeManager {
         dbmgr.saveTradeRecord(record);
     }
 
+    /**
+     * 获取交易记录
+     * @return
+     */
     public List<TradeRecord> getTradeRecords() {
         List<TradeRecord> records = dbmgr.getTradeRecords();
         return records;
+    }
+
+    /**
+     * 获取当前持股信息
+     * @return
+     */
+    public List<TradeRecord> getHoldStocks() {
+        List<TradeRecord> stocks = dbmgr.getHoldStocks();
+        return stocks;
     }
 }

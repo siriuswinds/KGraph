@@ -49,7 +49,7 @@ public class StockDayDetails extends Activity {
         Bundle bundle = intent.getExtras();
 
         String code = bundle.getString("STOCKCODE");
-        String date = bundle.getString("TRANSDATE");
+        String date = bundle.getString("TRADEDATE");
         this.setTitle(code + " " + date);
         mStockCode = code;
         mTransDate = date;

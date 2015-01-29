@@ -135,7 +135,7 @@ public class StockDayList extends Activity{
         intent.setClass(StockDayList.this,StockDayDetails.class);
         Bundle bundle = new Bundle();
         bundle.putString("STOCKCODE",stockcode);
-        bundle.putString("TRANSDATE",date);
+        bundle.putString("TRADEDATE",date);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -155,10 +155,10 @@ public class StockDayList extends Activity{
         String date = map.get("date");
 
         switch (mi.getItemId()){
-            case 0:
+            case 1:
                 openStockDayDetials(date);
                 break;
-            case 1:
+            case 2:
                 startStockTrade(date);
                 break;
         }
@@ -174,7 +174,7 @@ public class StockDayList extends Activity{
         intent.setClass(StockDayList.this,TradeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("STOCKCODE",stockcode);
-        bundle.putString("TRANSDATE",date);
+        bundle.putString("TRADEDATE",date);
         intent.putExtras(bundle);
         startActivity(intent);
     }
