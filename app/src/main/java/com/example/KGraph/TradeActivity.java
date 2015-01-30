@@ -2,6 +2,7 @@ package com.example.KGraph;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.Menu;
@@ -11,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ public class TradeActivity extends Activity {
     private Button mbtnReturn,mbtnBuy,mbtnSell;
     private EditText mtxtPrice,mtxtVolumn;
     private ListView mlvHostStocks,mlvMarket;
+    private TextView mtxtLastClose,mtxtOpen,mtxtHigh,mtxtLow,mtxtTurnVolumn,mtxtTurnOver,mtxtCHG,mtxtPCHG,mtxtCurrentPrice,mtxtDate;
     private SimpleAdapter adapterHoldStocks,adapterMarket;
     private ArrayList<Map<String,String>> mlistHostStocks,mlistMarket;
     private TradeManager trademgr;
@@ -38,8 +43,8 @@ public class TradeActivity extends Activity {
     private String mCode;
     private String mDate;
     private List<StockDayDeal> mdeals;
-    private int mdisplayIndex=8;
-    private float mCurrentPrice;
+    private int mdisplayIndex = Utils.DISPLAYINDEX;
+    private float mLastClose,mOpen,mHigh,mLow,mChg,mVol,mTurnover,mCurrentPrice;
 
     final android.os.Handler mhandler = new android.os.Handler(){
         @Override
@@ -48,10 +53,34 @@ public class TradeActivity extends Activity {
             switch (msg.what){
                 case 1:
                     adapterMarket.notifyDataSetChanged();
+                    updateStatics();
                     break;
             }
         }
     };
+
+    private void updateStatics() {
+        mtxtOpen.setText(String.format("%1$.2f",mOpen));
+        mtxtHigh.setText(String.format("%1$.2f",mHigh));
+        mtxtLow.setText(String.format("%1$.2f",mLow));
+        mtxtTurnVolumn.setText(String.format("%1$.2f",mVol/10000));
+        mtxtTurnOver.setText(String.format("%1$.2f",mTurnover/100000000));
+
+        mtxtDate.setText(mDate);
+        mtxtCurrentPrice.setText(String.format("%1$.2f",mCurrentPrice));
+        mtxtCHG.setText(String.format("%1$.2f", mChg));
+        mtxtPCHG.setText(String.format("%1$.2f",mChg*100/mOpen).concat("%"));
+
+        if(mChg >  0) setStaticsColor(Color.RED);
+        if(mChg <  0) setStaticsColor(Color.GREEN);
+        if(mChg == 0) setStaticsColor(Color.WHITE);
+    }
+
+    private void setStaticsColor(int color) {
+        mtxtCHG.setTextColor(color);
+        mtxtPCHG.setTextColor(color);
+        mtxtCurrentPrice.setTextColor(color);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +91,32 @@ public class TradeActivity extends Activity {
         Bundle bundle = intent.getExtras();
         mCode = bundle.getString("STOCKCODE");
         mDate = bundle.getString("TRADEDATE");
+        mLastClose = Float.parseFloat(bundle.getString("LCLOSE"));
 
         mtimer = new Timer();
         dbmgr = new DBManager(this);
         trademgr = new TradeManager(dbmgr);
 
+        initControls();
+        initHoldStocks();
+
+        mtask = new TimerTask() {
+            @Override
+            public void run() {
+                if(mdeals == null || (mdisplayIndex == Utils.DISPLAYINDEX && mdeals.size()==0))
+                    initStockMarket();
+                else
+                    displayMarket();
+
+                Message msg = new Message();
+                msg.what = 1;
+                mhandler.sendMessage(msg);
+            }
+        };
+        mtimer.schedule(mtask,1,Utils.SPEED);
+    }
+
+    private void initControls() {
         mlvHostStocks = (ListView)findViewById(R.id.holdstocklist);
         mlistHostStocks = new ArrayList<Map<String, String>>();
         adapterHoldStocks = new SimpleAdapter(this,mlistHostStocks,R.layout.holdstocklist,new String[]{"code","name","price","currentprice","volumn","share"},new int[]{R.id.txtCode,R.id.txtName,R.id.txtPrice,R.id.txtCurrentPrice,R.id.txtTURNVOLUMN,R.id.txtSHARE});
@@ -77,9 +127,6 @@ public class TradeActivity extends Activity {
         adapterMarket = new SimpleAdapter(this,mlistMarket,R.layout.marketinfo,new String[]{"成交时间","成交价","价格变动","成交量","成交额","性质"},new int[]{R.id.txtDealTime,R.id.txtPrice,R.id.txtPriceCHG,R.id.txtDealCount,R.id.txtDealAmount,R.id.txtDealType});
         mlvMarket.setAdapter(adapterMarket);
 
-        initHoldStocks();
-        //initStockMarket();
-
         mbtnReturn = (Button)findViewById(R.id.btnReturn);
         mbtnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +135,7 @@ public class TradeActivity extends Activity {
                 finish();
             }
         });
+
         mbtnBuy = (Button)findViewById(R.id.btnBuy);
         mbtnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +143,7 @@ public class TradeActivity extends Activity {
 
             }
         });
+
         mbtnSell = (Button)findViewById(R.id.btnSell);
         mbtnSell.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,23 +151,23 @@ public class TradeActivity extends Activity {
 
             }
         });
+
         mtxtPrice = (EditText)findViewById(R.id.txtPrice);
         mtxtVolumn = (EditText)findViewById(R.id.txtVolumn);
 
-        mtask = new TimerTask() {
-            @Override
-            public void run() {
-                if(mdeals == null || (mdisplayIndex == 8 && mdeals.size()==0))
-                    initStockMarket();
-                else
-                    displayMarket();
+        mtxtLastClose = (TextView)findViewById(R.id.txtLastClose);
+        mtxtLastClose.setText(String.format("%1$.2f",mLastClose));
 
-                Message msg = new Message();
-                msg.what = 1;
-                mhandler.sendMessage(msg);
-            }
-        };
-        mtimer.schedule(mtask,1000,Utils.SPEED);
+        mtxtOpen = (TextView)findViewById(R.id.txtOPEN);
+        mtxtHigh = (TextView)findViewById(R.id.txtHIGH);
+        mtxtLow = (TextView)findViewById(R.id.txtLOW);
+        mtxtTurnOver = (TextView)findViewById(R.id.txtTURNOVER);
+        mtxtTurnVolumn = (TextView)findViewById(R.id.txtTURNVOLUMN);
+
+        mtxtCHG = (TextView)findViewById(R.id.txtCHG);
+        mtxtPCHG = (TextView)findViewById(R.id.txtPCHG);
+        mtxtCurrentPrice = (TextView)findViewById(R.id.txtCurrentPrice);
+        mtxtDate = (TextView)findViewById(R.id.txtDate);
     }
 
     private void initStockMarket() {
@@ -132,6 +181,8 @@ public class TradeActivity extends Activity {
         for(int i = 0;i<mdisplayIndex;i++){
             StockDayDeal deal = mdeals.get(i);
             addMarketItem(deal);
+
+            if(i==0) mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
         }
     }
 
@@ -150,8 +201,9 @@ public class TradeActivity extends Activity {
      * 读取下一天分笔数据
      */
     private void loadNextDayMarket() {
+        mLastClose = mCurrentPrice;
         mdeals.clear();
-        mdisplayIndex = 8;
+        mdisplayIndex = Utils.DISPLAYINDEX;
         Calendar c = Calendar.getInstance();
         try {
             Date d = Utils.DayFormatter.parse(mDate);
@@ -176,8 +228,16 @@ public class TradeActivity extends Activity {
         map.put("成交量",String.valueOf(deal.DealCount));
         map.put("成交额",String.format("%1$.2f", deal.DealAmount / 10000.0));
         map.put("性质",deal.DealType);
-        mCurrentPrice = deal.Price;
+
         mlistMarket.add(map);
+
+        if(deal.Price > mHigh) mHigh = deal.Price;
+        if(deal.Price < mLow) mLow = deal.Price;
+
+        mCurrentPrice = deal.Price;
+        mVol += deal.DealCount;
+        mTurnover += deal.DealAmount;
+        mChg = mCurrentPrice - mOpen;
     }
 
     /**

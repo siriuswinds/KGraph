@@ -18,10 +18,17 @@ import java.util.List;
  * Created by yangj on 2015/1/27.
  */
 public class Utils {
-    public static int SPEED = 500;
+    public static int DISPLAYINDEX = 8;
+    /**
+     * 更新速度
+     */
+    public static int SPEED = 300;
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DayFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss");
+    public static String URL = "http://market.finance.sina.com.cn/downxls.php?date=%1$s&symbol=%2$s";
+    public static String DAYURL = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+    public final static String[] WeekName = new String[]{"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 
     public static String TRADETYPETOSTRING(TRADETYPE tradeType) {
         String result = "";
@@ -58,7 +65,7 @@ public class Utils {
 
     public static List<StockDayDeal> downloadDayDeals(DBManager dbmgr, String code, String date) {
         List<StockDayDeal> mdeals = new ArrayList<StockDayDeal>();
-        String url = "http://market.finance.sina.com.cn/downxls.php?date=%1$s&symbol=%2$s";
+        String url = Utils.URL;
 
         if(Integer.parseInt(code)<600000)
             code = "sz"+code;

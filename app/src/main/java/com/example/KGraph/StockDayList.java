@@ -29,18 +29,18 @@ public class StockDayList extends Activity{
 	private SimpleDateFormat m_sdf;
     private int mYearIndex;
     private int mYearCurr;
-    private String[] WeekName = new String[]{"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 	
     List<StockDay> m_downlowdStocks = null;
     SimpleAdapter adapter;
     String stockcode;
 	String urlcode;
-    String urltpl = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+    String urltpl = Utils.DAYURL;
     String stockurl;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stockdayview);
+
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         stockcode = bundle.getString("STOCKCODE");
@@ -49,7 +49,6 @@ public class StockDayList extends Activity{
         myHandler = new MyHandler();
         dbMgr = new DBManager(this);
 
-        m_sdf=new SimpleDateFormat("yyyy-MM-dd");
         m_currentDate= Calendar.getInstance();
         mYearIndex = m_currentDate.get(Calendar.YEAR);
         mYearCurr = mYearIndex;
@@ -152,14 +151,16 @@ public class StockDayList extends Activity{
     public boolean onContextItemSelected(MenuItem mi){
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)mi.getMenuInfo();
         HashMap<String, String> map  = (HashMap<String, String>)adapter.getItem(menuInfo.position);
+        HashMap<String, String> Lmap  = (HashMap<String, String>)adapter.getItem(menuInfo.position+1);
         String date = map.get("date");
+        String lclose = Lmap.get("tclose");
 
         switch (mi.getItemId()){
             case 1:
                 openStockDayDetials(date);
                 break;
             case 2:
-                startStockTrade(date);
+                startStockTrade(date,lclose);
                 break;
         }
         return super.onContextItemSelected(mi);
@@ -169,12 +170,13 @@ public class StockDayList extends Activity{
      * 开始模拟交易
      * @param date
      */
-    private void startStockTrade(String date) {
+    private void startStockTrade(String date,String lclose) {
         Intent intent = new Intent();
         intent.setClass(StockDayList.this,TradeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("STOCKCODE",stockcode);
         bundle.putString("TRADEDATE",date);
+        bundle.putString("LCLOSE",lclose);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -240,11 +242,11 @@ public class StockDayList extends Activity{
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("date", stock.TRANSDATE);
             try {
-                Date dt = m_sdf.parse(stock.TRANSDATE);
+                Date dt = Utils.DayFormatter.parse(stock.TRANSDATE);
                 Calendar c = Calendar.getInstance();
                 c.setTime(dt);
                 int week = c.get(Calendar.DAY_OF_WEEK);
-                map.put("week",WeekName[week-1]);
+                map.put("week",Utils.WeekName[week-1]);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
