@@ -60,6 +60,7 @@ public class TradeActivity extends Activity {
     };
 
     private void updateStatics() {
+        mtxtLastClose.setText(String.format("%1$.2f",mLastClose));
         mtxtOpen.setText(String.format("%1$.2f",mOpen));
         mtxtHigh.setText(String.format("%1$.2f",mHigh));
         mtxtLow.setText(String.format("%1$.2f",mLow));
@@ -202,6 +203,10 @@ public class TradeActivity extends Activity {
      */
     private void loadNextDayMarket() {
         mLastClose = mCurrentPrice;
+        mCurrentPrice = 0;
+        mVol = 0;
+        mTurnover = 0;
+
         mdeals.clear();
         mdisplayIndex = Utils.DISPLAYINDEX;
         Calendar c = Calendar.getInstance();

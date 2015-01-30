@@ -26,7 +26,6 @@ public class StockDayList extends Activity{
     private DBManager dbMgr;
     private ArrayList<Map<String,String>> list;
 	private Calendar m_currentDate;
-	private SimpleDateFormat m_sdf;
     private int mYearIndex;
     private int mYearCurr;
 	
@@ -211,9 +210,9 @@ public class StockDayList extends Activity{
         int lastyear = cal.get(Calendar.YEAR);
 
         if(cal.before(m_currentDate)&&(lastyear == m_currentDate.get(Calendar.YEAR))){
-            String cn1 = m_sdf.format(m_currentDate.getTime());
+            String cn1 = Utils.DayFormatter.format(m_currentDate.getTime());
             cal.add(Calendar.DATE,1);
-            String cs1 = m_sdf.format(cal.getTime());
+            String cs1 = Utils.DayFormatter.format(cal.getTime());
             String cn2 = cn1.replace("-","");
             String cs2 = cs1.replace("-","");
             stockurl = String.format(urltpl,urlcode,cs2,cn2);
@@ -224,7 +223,7 @@ public class StockDayList extends Activity{
             cal.add(Calendar.DATE,1);
             String Year = String.valueOf(mYearIndex);
             String cn1 = Year.concat("-12-31");
-            String cs1 = m_sdf.format(cal.getTime());
+            String cs1 = Utils.DayFormatter.format(cal.getTime());
             String cn2 = Year.concat("1231");
             String cs2 = cs1.replace("-","");
             stockurl = String.format(urltpl,urlcode,cs2,cn2);
