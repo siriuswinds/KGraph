@@ -69,7 +69,7 @@ public class TradeActivity extends Activity {
         mtxtDate.setText(mDate);
         mtxtCurrentPrice.setText(String.format("%1$.2f",mCurrentPrice));
         mtxtCHG.setText(String.format("%1$.2f", mChg));
-        mtxtPCHG.setText(String.format("%1$.2f",mChg*100/mOpen).concat("%"));
+        mtxtPCHG.setText(String.format("%1$.2f",mChg*100/mLastClose).concat("%"));
 
         if(mChg >  0) setStaticsColor(Color.RED);
         if(mChg <  0) setStaticsColor(Color.GREEN);
@@ -237,7 +237,7 @@ public class TradeActivity extends Activity {
         mCurrentPrice = deal.Price;
         mVol += deal.DealCount;
         mTurnover += deal.DealAmount;
-        mChg = mCurrentPrice - mOpen;
+        mChg = mCurrentPrice - mLastClose;
     }
 
     /**
