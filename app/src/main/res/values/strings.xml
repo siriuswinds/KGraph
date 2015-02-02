@@ -16,5 +16,6 @@
     <string name="btnRollOut">转出</string>
     <string name="btnPayInto">转入</string>
     <string name="btnReset">重置</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

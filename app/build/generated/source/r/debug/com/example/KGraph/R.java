@@ -9,6 +9,39 @@ package com.example.KGraph;
 
 public final class R {
     public static final class attr {
+        /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+         */
+        public static final int Drawable=0x7f010003;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int Text=0x7f010000;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int TextColor=0x7f010002;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int TextSize=0x7f010001;
     }
     public static final class color {
         public static final int gray=0x7f040000;
@@ -22,100 +55,110 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080046;
-        public static final int btnAccount=0x7f08002a;
-        public static final int btnAddFavorite=0x7f08003c;
-        public static final int btnBuy=0x7f08001d;
-        public static final int btnExit=0x7f08002b;
-        public static final int btnFavorite=0x7f080028;
-        public static final int btnMarket=0x7f080027;
+        public static final int action_settings=0x7f08004c;
+        public static final int btnAccount=0x7f08002b;
+        public static final int btnAddFavorite=0x7f080042;
+        public static final int btnBuy=0x7f08001e;
+        public static final int btnExit=0x7f08002c;
+        public static final int btnFavorite=0x7f080029;
+        public static final int btnMarket=0x7f080028;
         public static final int btnNextPage=0x7f08000d;
-        public static final int btnNextYear=0x7f08003b;
+        public static final int btnNextYear=0x7f080041;
         public static final int btnOK=0x7f080010;
         public static final int btnPayInto=0x7f080006;
         public static final int btnPrePage=0x7f08000c;
-        public static final int btnPreYear=0x7f08003a;
-        public static final int btnRefresh=0x7f080022;
+        public static final int btnPreYear=0x7f080040;
+        public static final int btnRefresh=0x7f080023;
         public static final int btnReset=0x7f080009;
         public static final int btnReturn=0x7f08000b;
         public static final int btnRollOut=0x7f080008;
-        public static final int btnSell=0x7f080020;
-        public static final int btnSetting=0x7f08002c;
-        public static final int btnStatistic=0x7f080023;
-        public static final int btnTrade=0x7f080029;
-        public static final int btnTradeRecord=0x7f08002d;
-        public static final int holdstocklist=0x7f08001c;
-        public static final int marketinfo=0x7f08001b;
-        public static final int stockdaylist=0x7f080039;
-        public static final int stockdetaillist=0x7f080034;
+        public static final int btnSell=0x7f080021;
+        public static final int btnSetting=0x7f08002d;
+        public static final int btnStatistic=0x7f080024;
+        public static final int btnTest=0x7f08002f;
+        public static final int btnTrade=0x7f08002a;
+        public static final int btnTradeRecord=0x7f08002e;
+        public static final int button=0x7f080035;
+        public static final int button2=0x7f080036;
+        public static final int button3=0x7f080037;
+        public static final int button4=0x7f080038;
+        public static final int holdstocklist=0x7f08001d;
+        public static final int marketinfo=0x7f08001c;
+        public static final int myGraph=0x7f080011;
+        public static final int stockdaylist=0x7f08003f;
+        public static final int stockdetaillist=0x7f08003a;
         public static final int stocklist=0x7f08000a;
-        public static final int text1=0x7f080033;
+        public static final int text1=0x7f080039;
         public static final int textView=0x7f08000e;
-        public static final int tradelist=0x7f080021;
+        public static final int tradelist=0x7f080022;
         public static final int txtAssets=0x7f080004;
         public static final int txtAvailableBalance=0x7f080001;
-        public static final int txtCHG=0x7f080013;
+        public static final int txtCHG=0x7f080014;
         public static final int txtCapticalBalance=0x7f080000;
-        public static final int txtCode=0x7f080024;
-        public static final int txtCurrentPrice=0x7f080012;
-        public static final int txtDate=0x7f080011;
-        public static final int txtDealAmount=0x7f080031;
-        public static final int txtDealCount=0x7f080030;
-        public static final int txtDealTime=0x7f08002e;
-        public static final int txtDealType=0x7f080032;
-        public static final int txtHIGH=0x7f080017;
-        public static final int txtIndustry=0x7f080040;
-        public static final int txtLOW=0x7f080018;
-        public static final int txtLastClose=0x7f080015;
+        public static final int txtCode=0x7f080025;
+        public static final int txtCurrentPrice=0x7f080013;
+        public static final int txtDate=0x7f080012;
+        public static final int txtDealAmount=0x7f080033;
+        public static final int txtDealCount=0x7f080032;
+        public static final int txtDealTime=0x7f080030;
+        public static final int txtDealType=0x7f080034;
+        public static final int txtHIGH=0x7f080018;
+        public static final int txtIndustry=0x7f080046;
+        public static final int txtLOW=0x7f080019;
+        public static final int txtLastClose=0x7f080016;
         public static final int txtMarketValue=0x7f080002;
-        public static final int txtName=0x7f080025;
-        public static final int txtOPEN=0x7f080016;
-        public static final int txtPCHG=0x7f080014;
-        public static final int txtPHG=0x7f08003e;
+        public static final int txtName=0x7f080026;
+        public static final int txtOPEN=0x7f080017;
+        public static final int txtPCHG=0x7f080015;
+        public static final int txtPHG=0x7f080044;
         public static final int txtPayInto=0x7f080005;
-        public static final int txtPrice=0x7f08001e;
-        public static final int txtPriceCHG=0x7f08002f;
-        public static final int txtRegion=0x7f080041;
+        public static final int txtPrice=0x7f08001f;
+        public static final int txtPriceCHG=0x7f080031;
+        public static final int txtRegion=0x7f080047;
         public static final int txtRollOut=0x7f080007;
-        public static final int txtSHARE=0x7f080026;
-        public static final int txtSearchCode=0x7f080042;
+        public static final int txtSHARE=0x7f080027;
+        public static final int txtSearchCode=0x7f080048;
         public static final int txtShares=0x7f080003;
         public static final int txtSpeed=0x7f08000f;
-        public static final int txtStockCode=0x7f08003d;
-        public static final int txtStockName=0x7f08003f;
-        public static final int txtTCLOSE=0x7f080035;
-        public static final int txtTOPEN=0x7f080036;
-        public static final int txtTRADETYPE=0x7f080045;
-        public static final int txtTURNOVER=0x7f08001a;
-        public static final int txtTURNVOLUMN=0x7f080019;
-        public static final int txtTradeDate=0x7f080043;
-        public static final int txtTradeTime=0x7f080044;
-        public static final int txtVATURNOVER=0x7f080038;
-        public static final int txtVolumn=0x7f08001f;
-        public static final int txtWeek=0x7f080037;
+        public static final int txtStockCode=0x7f080043;
+        public static final int txtStockName=0x7f080045;
+        public static final int txtTCLOSE=0x7f08003b;
+        public static final int txtTOPEN=0x7f08003c;
+        public static final int txtTRADETYPE=0x7f08004b;
+        public static final int txtTURNOVER=0x7f08001b;
+        public static final int txtTURNVOLUMN=0x7f08001a;
+        public static final int txtTradeDate=0x7f080049;
+        public static final int txtTradeTime=0x7f08004a;
+        public static final int txtVATURNOVER=0x7f08003e;
+        public static final int txtVolumn=0x7f080020;
+        public static final int txtWeek=0x7f08003d;
     }
     public static final class layout {
         public static final int activity_account=0x7f030000;
         public static final int activity_favorites=0x7f030001;
         public static final int activity_setting=0x7f030002;
-        public static final int activity_trade=0x7f030003;
-        public static final int activity_traderecord=0x7f030004;
-        public static final int holdstocklist=0x7f030005;
-        public static final int main=0x7f030006;
-        public static final int marketinfo=0x7f030007;
-        public static final int simple_text=0x7f030008;
-        public static final int stockdaydetaillist=0x7f030009;
-        public static final int stockdaydetailview=0x7f03000a;
-        public static final int stockdaylist=0x7f03000b;
-        public static final int stockdayview=0x7f03000c;
-        public static final int stocklist=0x7f03000d;
-        public static final int stockview=0x7f03000e;
-        public static final int traderecordlist=0x7f03000f;
+        public static final int activity_test=0x7f030003;
+        public static final int activity_trade=0x7f030004;
+        public static final int activity_traderecord=0x7f030005;
+        public static final int holdstocklist=0x7f030006;
+        public static final int main=0x7f030007;
+        public static final int marketinfo=0x7f030008;
+        public static final int my_graph=0x7f030009;
+        public static final int simple_text=0x7f03000a;
+        public static final int stockdaydetaillist=0x7f03000b;
+        public static final int stockdaydetailview=0x7f03000c;
+        public static final int stockdaylist=0x7f03000d;
+        public static final int stockdayview=0x7f03000e;
+        public static final int stocklist=0x7f03000f;
+        public static final int stockview=0x7f030010;
+        public static final int traderecordlist=0x7f030011;
     }
     public static final class menu {
         public static final int menu_account=0x7f070000;
-        public static final int menu_setting=0x7f070001;
-        public static final int menu_trade=0x7f070002;
+        public static final int menu_favorites=0x7f070001;
+        public static final int menu_setting=0x7f070002;
+        public static final int menu_test=0x7f070003;
+        public static final int menu_trade=0x7f070004;
     }
     public static final class string {
         public static final int action_settings=0x7f060000;
@@ -132,6 +175,85 @@ public final class R {
         public static final int title_activity_favorites=0x7f06000b;
         public static final int title_activity_main=0x7f06000c;
         public static final int title_activity_setting=0x7f06000d;
-        public static final int title_activity_trade=0x7f06000e;
+        public static final int title_activity_test=0x7f06000e;
+        public static final int title_activity_trade=0x7f06000f;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a MyGraph.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #MyGraph_Drawable com.example.KGraph:Drawable}</code></td><td></td></tr>
+           <tr><td><code>{@link #MyGraph_Text com.example.KGraph:Text}</code></td><td></td></tr>
+           <tr><td><code>{@link #MyGraph_TextColor com.example.KGraph:TextColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #MyGraph_TextSize com.example.KGraph:TextSize}</code></td><td></td></tr>
+           </table>
+           @see #MyGraph_Drawable
+           @see #MyGraph_Text
+           @see #MyGraph_TextColor
+           @see #MyGraph_TextSize
+         */
+        public static final int[] MyGraph = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.KGraph.R.attr#Drawable}
+          attribute's value can be found in the {@link #MyGraph} array.
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+          @attr name com.example.KGraph:Drawable
+        */
+        public static final int MyGraph_Drawable = 3;
+        /**
+          <p>This symbol is the offset where the {@link com.example.KGraph.R.attr#Text}
+          attribute's value can be found in the {@link #MyGraph} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.KGraph:Text
+        */
+        public static final int MyGraph_Text = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.example.KGraph.R.attr#TextColor}
+          attribute's value can be found in the {@link #MyGraph} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.KGraph:TextColor
+        */
+        public static final int MyGraph_TextColor = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.example.KGraph.R.attr#TextSize}
+          attribute's value can be found in the {@link #MyGraph} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.KGraph:TextSize
+        */
+        public static final int MyGraph_TextSize = 1;
+    };
 }

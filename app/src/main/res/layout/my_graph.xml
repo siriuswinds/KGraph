@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="fill_parent"
+    android:weightSum="1">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="top">
+    <com.example.KGraph.MyGraph  android:background="#ffffff" android:layout_width="match_parent"
+        android:layout_height="fill_parent" android:paddingLeft="20dp" android:paddingBottom="40dp"
+        app:TextSize="30sp" app:TextColor="#000000" app:Text="Hello, MyGraph"
+        app:Drawable="@android:drawable/ic_menu_add" />
+</LinearLayout>
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_gravity="bottom"
+    android:layout_height="wrap_content">
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button2" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button3" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button4" />
+</LinearLayout>
+</LinearLayout>

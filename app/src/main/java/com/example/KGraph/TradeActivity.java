@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import java.util.logging.LogRecord;
 
 public class TradeActivity extends Activity {
     private Button mbtnReturn,mbtnBuy,mbtnSell;
+    private com.example.KGraph.MyGraph mGraph;
     private EditText mtxtPrice,mtxtVolumn;
     private ListView mlvHostStocks,mlvMarket;
     private TextView mtxtLastClose,mtxtOpen,mtxtHigh,mtxtLow,mtxtTurnVolumn,mtxtTurnOver,mtxtCHG,mtxtPCHG,mtxtCurrentPrice,mtxtDate;

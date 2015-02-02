@@ -12,7 +12,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <application android:theme="@android:style/Theme.NoTitleBar" >
+    <application
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.NoTitleBar" >
         <activity android:name=".DayGraph" />
         <activity android:name=".KGraph" />
         <activity android:name=".StockList" />
@@ -46,6 +48,10 @@
         <activity
             android:name=".TradeActivity"
             android:label="@string/title_activity_trade" >
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
         </activity>
     </application>
 

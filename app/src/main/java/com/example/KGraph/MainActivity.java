@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
-    private Button btnMarket,btnTrade,btnTradeRecord,btnSetting,btnFavorite,btnAccount,btnExit;
+    private Button btnMarket,btnTrade,btnTradeRecord,btnSetting,btnFavorite,btnAccount,btnExit,btnTest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
         btnTradeRecord = (Button)findViewById(R.id.btnTradeRecord);
         btnSetting = (Button)findViewById(R.id.btnSetting);
         btnExit = (Button)findViewById(R.id.btnExit);
+        btnTest = (Button)findViewById(R.id.btnTest);
 
         btnTrade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +80,15 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,TestActivity.class);
+                startActivity(intent);
             }
         });
     }
