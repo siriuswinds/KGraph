@@ -23,7 +23,7 @@ public class Painter {
     public void paintVolumn(){}
 
     public void paintBound(){
-        mPaint.setColor(Color.LTGRAY);
+        mPaint.setColor(Color.DKGRAY);
         mPaint.setStyle(Paint.Style.STROKE); //设置填充
         Canvas.drawRect(5, 5, mWidth-5, mHeight-5, mPaint); //绘制矩形
         mPaint.setColor(Color.DKGRAY);
@@ -40,6 +40,7 @@ public class Painter {
         for(int i=1;i<4;i++){
             Canvas.drawLine(i*v,5,i*v,mHeight-5,mPaint);
         }
+        //http://data.gtimg.cn/flashdata/hushen/minute/sh601988.js?0.5876284902915359
     }
 
     public void paint(){
