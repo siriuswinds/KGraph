@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.List;
+
 
 /**
  * TODO: document your custom view class.
@@ -151,5 +153,13 @@ public class MyGraph extends View {
      */
     public void setDrawable(Drawable drawable) {
         mDrawable = drawable;
+    }
+
+    public void initMinuteGraph() {
+
+    }
+
+    public void DrawMinuteGraph(List<StockDayDeal> mMinuteData) {
+
     }
 }

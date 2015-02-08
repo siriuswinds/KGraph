@@ -44,7 +44,7 @@ public class TradeActivity extends Activity {
     private TimerTask mtask;
     private String mCode;
     private String mDate;
-    private List<StockDayDeal> mdeals;
+    private List<StockDayDeal> mdeals,mMinuteData;
     private int mdisplayIndex = Utils.DISPLAYINDEX;
     private float mLastClose,mOpen,mHigh,mLow,mChg,mVol,mTurnover,mCurrentPrice;
 
@@ -116,6 +116,7 @@ public class TradeActivity extends Activity {
                 mhandler.sendMessage(msg);
             }
         };
+
         mtimer.schedule(mtask,1,Utils.SPEED);
     }
 
@@ -171,6 +172,8 @@ public class TradeActivity extends Activity {
         mtxtPCHG = (TextView)findViewById(R.id.txtPCHG);
         mtxtCurrentPrice = (TextView)findViewById(R.id.txtCurrentPrice);
         mtxtDate = (TextView)findViewById(R.id.txtDate);
+        mGraph = (MyGraph)findViewById(R.id.myGraph);
+        mGraph.initMinuteGraph();
     }
 
     private void initStockMarket() {
@@ -185,8 +188,12 @@ public class TradeActivity extends Activity {
             StockDayDeal deal = mdeals.get(i);
             addMarketItem(deal);
 
-            if(i==0) mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
+            if(i == 0) {
+                mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
+                mMinuteData = Utils.GetMinuteData(mdeals);
+            }
         }
+        mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     private void displayMarket() {
