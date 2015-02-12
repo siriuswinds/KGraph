@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +49,7 @@ public class TradeActivity extends Activity {
     private List<StockDayDeal> mdeals,mMinuteData,mGraphData;
     private int mdisplayIndex = Utils.DISPLAYINDEX;
     private float mLastClose,mOpen,mHigh,mLow,mChg,mVol,mTurnover,mCurrentPrice;
+    private boolean canStopTimer = true;
 
     final android.os.Handler mhandler = new android.os.Handler(){
         @Override
@@ -181,7 +184,9 @@ public class TradeActivity extends Activity {
         mlistMarket.clear();
 
         if(mdeals.size()==0){
+            canStopTimer = false;
             mdeals = Utils.downloadDayDeals(dbmgr,mCode,mDate);
+            canStopTimer = true;
         }
 
         if(mdeals.size()==0) return;
@@ -193,23 +198,27 @@ public class TradeActivity extends Activity {
             if(i == 0) {
                 mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
                 mGraph.initMinuteGraph(mLastClose);
-
             }
         }
     }
 
     private void displayMarket() {
         ++mdisplayIndex;
+
         if(mdisplayIndex == mdeals.size()){
             loadNextDayMarket();
             mGraphData.clear();
             return;
         }
+
+        Log.d("",String.valueOf(mdisplayIndex));
+
         mlistMarket.remove(0);
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
         mGraphData.add(deal);
         mMinuteData = Utils.GetMinuteData(mGraphData);
+        //mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     /**
@@ -298,5 +307,19 @@ public class TradeActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onDestroy(){
+        Log.d(this.getLocalClassName(),"退出清理");
+
+        if(mtimer != null) {
+            while(canStopTimer){
+                mtimer.cancel();
+                Log.d(this.getLocalClassName(),"线程终止");
+                canStopTimer = false;
+            }
+        }
+
+        super.onDestroy();
     }
 }

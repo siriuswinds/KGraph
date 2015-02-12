@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class MinsPainter extends Painter {
     float mlastClose,maxDiff;
+    List<StockDayDeal> Deals;
     int backColor = Color.rgb(0,0,0);
     int fallColor = Color.rgb(7,244,7);
     int riseColor = Color.rgb(255,61,1);
@@ -48,53 +49,6 @@ public class MinsPainter extends Painter {
     private void init() {
         mWidth = Canvas.getWidth();
         mHeight = Canvas.getHeight();
-
-        float Mc = 45;
-        float Nc = 0;
-        float Oc = 45;
-        float Pc = mWidth - Oc;
-        float Qc = Nc + Mc + 2.5f;
-        float Rc = Pc - Qc - 2.5f;
-        float Sc = 20;
-        float Tc = 3.5f;
-        float Uc = Sc - 4.5f;
-        float Vc = Sc - 0.5f;
-        boolean Wc = true;
-        float Xc = 5;
-        if (!Wc) {
-            Vc = Xc;
-        }
-        float Yc = (float)Math.ceil((mHeight - Vc - Sc * 2.0f) * 2.0f / 3.0f);
-        float Zc = (float)Math.floor(Yc / 80) * 2 + 1;
-        float $c = Vc + Yc + 3;
-        float ad = Sc - 3;
-        float bd = Vc + Yc + Sc;
-        float cd = (float)Math.ceil(mHeight - bd - Sc);
-        float dd = bd + cd + 4.5f;
-        float ed = Sc - 4.5f;
-        boolean fd = false;
-
-        if (!fd) {
-            cd =(float)Math.floor(cd + Sc - Xc);
-        }
-
-        int gd = Color.rgb(0, 0, 0);
-        int hd = Color.rgb(255,61,1);
-        int jd = Color.rgb(7,244,7);
-        int kd = Color.rgb(255,255,255);
-        int ld = Color.rgb(255,255,255);
-        int md = Color.rgb(233,233,233);
-        int nd = Color.rgb(185,185,0);
-        int od = Color.rgb(233,233,233);
-        int pd = Color.rgb(192,192,0);
-        int qd = Color.rgb(200,34,34);
-        int rd = Color.rgb(185,185,0);
-        int sd = 241;
-        String[] td = new String[]{"09:30", "11:30/13:00", "15:00"};
-        float[] ud = new float[]{0f, 0.5f, 1f};
-        int vd = td.length - 2;
-
-        topTextRegion = new RectF(Qc,Tc,Rc,Uc);
     }
 
     private void paintVolume(){
@@ -120,8 +74,8 @@ public class MinsPainter extends Painter {
         mPaint.setColor(Color.DKGRAY);
 
         //绘制水平分割
-        int h = (mHeight-10)/6;
-        for(int i =1;i<6;i++)
+        int h = (mHeight-10)/4;
+        for(int i =1;i<4;i++)
         {
             Canvas.drawLine(5,i*h,mWidth-5,i*h,mPaint);
         }
@@ -138,8 +92,8 @@ public class MinsPainter extends Painter {
         return (i+1)*((mWidth-10)/241);
     }
 
-    private float getY(int i, List<StockDayDeal> datas){
-        float diff = datas.get(i).Price - mlastClose;
+    private float getY(int i){
+        float diff = Deals.get(i).Price - mlastClose;
         float result = 0 - diff * mHeight / 2 / this.maxDiff;
         return result;
     }
@@ -157,36 +111,35 @@ public class MinsPainter extends Painter {
     }
 
     private void paintChart(){
-        if(Data == null) return;
+        if(Deals == null||Deals.size() < 2) return;
 
-        List<StockDayDeal> deals = (List<StockDayDeal>)Data;
-
-        int size = deals.size();
+        int size = Deals.size();
 
         Canvas.save();
-        Canvas.translate(5,2*(mHeight-10)/6);
-
-        float pb,qb,rb=0,sb=0;
-
-        for(int i = 0;i<deals.size();i++){
-            float diff = Math.abs(mlastClose - deals.get(i).Price);
-            maxDiff = Math.max(diff,maxDiff);
-        }
-
-        float maxRangePrc = Math.max(Math.abs(mlastClose - rb), Math.abs(mlastClose - sb));
+        Canvas.translate(5,(mHeight-10)/2);
 
         mPaint.setColor(Color.LTGRAY);
 
-        for(int i = 1;i<deals.size();i++){
+        for(int i = 1;i<Deals.size();i++){
             float x1 = getX(i-1);
             float x2 = getX(i);
-            float y1 = getY(i-1,deals);
-            float y2 = getY(i,deals);
+            float y1 = getY(i-1);
+            float y2 = getY(i);
             Canvas.drawLine(x1,y1,x2,y2,mPaint);
         }
     }
 
     private void fillTopText(){
 
+    }
+
+    @Override
+    public void setData(Object data){
+        Deals = (List<StockDayDeal>)data;
+
+        for(int i = 0;i<Deals.size();i++){
+            float diff = Math.abs(mlastClose - Deals.get(i).Price);
+            maxDiff = Math.max(diff,maxDiff);
+        }
     }
 }

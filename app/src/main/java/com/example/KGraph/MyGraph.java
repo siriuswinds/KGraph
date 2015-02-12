@@ -160,7 +160,7 @@ public class MyGraph extends View {
     }
 
     public void DrawMinuteGraph(List<StockDayDeal> mMinuteData) {
-        mPainter.Data = mMinuteData;
+        mPainter.setData(mMinuteData);
         this.postInvalidate();
     }
 }

@@ -23,7 +23,7 @@ public class Utils {
     /**
      * 更新速度
      */
-    public static int SPEED = 200;
+    public static int SPEED = 500;
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DayFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss");
@@ -136,7 +136,7 @@ public class Utils {
                     StockDayDeal mdata3 = new StockDayDeal();
                     mdata3.DealTime = TimeFormatter.format(t1);
                     mdata3.DealCount = vol;
-                    mdata3.Price = price;
+                    mdata3.Price = deal.Price;
                     minutedata.add(mdata3);
                     continue;
                 }

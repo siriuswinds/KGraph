@@ -24,4 +24,8 @@ public class Painter {
 
     }
 
+    public void setData(Object data){
+        Data = data;
+    }
+
 }
