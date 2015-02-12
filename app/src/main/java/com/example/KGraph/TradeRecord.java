@@ -10,6 +10,6 @@ public class TradeRecord {
     public float Price;
     public float TurnOver;
     public float TurnVolumn;
-    public TRADETYPE TradeType;
+    public com.example.KGraph.TradeType TradeType;
     public String Code;
 }

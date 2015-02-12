@@ -3,7 +3,7 @@ package com.example.KGraph;
 /**
  * Created by yangj on 2015/1/27.
  */
-public enum TRADETYPE {
+public enum TradeType {
     /**
      * 转入
      */

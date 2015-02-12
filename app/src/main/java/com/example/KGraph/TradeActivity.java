@@ -44,7 +44,7 @@ public class TradeActivity extends Activity {
     private TimerTask mtask;
     private String mCode;
     private String mDate;
-    private List<StockDayDeal> mdeals,mMinuteData;
+    private List<StockDayDeal> mdeals,mMinuteData,mGraphData;
     private int mdisplayIndex = Utils.DISPLAYINDEX;
     private float mLastClose,mOpen,mHigh,mLow,mChg,mVol,mTurnover,mCurrentPrice;
 
@@ -56,6 +56,7 @@ public class TradeActivity extends Activity {
                 case 1:
                     adapterMarket.notifyDataSetChanged();
                     updateStatics();
+                    mGraph.DrawMinuteGraph(mMinuteData);
                     break;
             }
         }
@@ -99,7 +100,7 @@ public class TradeActivity extends Activity {
         mtimer = new Timer();
         dbmgr = new DBManager(this);
         trademgr = new TradeManager(dbmgr);
-
+        mGraphData = new ArrayList<StockDayDeal>();
         initControls();
         initHoldStocks();
 
@@ -173,7 +174,6 @@ public class TradeActivity extends Activity {
         mtxtCurrentPrice = (TextView)findViewById(R.id.txtCurrentPrice);
         mtxtDate = (TextView)findViewById(R.id.txtDate);
         mGraph = (MyGraph)findViewById(R.id.myGraph);
-        mGraph.initMinuteGraph();
     }
 
     private void initStockMarket() {
@@ -184,27 +184,32 @@ public class TradeActivity extends Activity {
             mdeals = Utils.downloadDayDeals(dbmgr,mCode,mDate);
         }
 
+        if(mdeals.size()==0) return;
+
         for(int i = 0;i<mdisplayIndex;i++){
             StockDayDeal deal = mdeals.get(i);
             addMarketItem(deal);
 
             if(i == 0) {
                 mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
-                mMinuteData = Utils.GetMinuteData(mdeals);
+                mGraph.initMinuteGraph(mLastClose);
+
             }
         }
-        mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     private void displayMarket() {
         ++mdisplayIndex;
         if(mdisplayIndex == mdeals.size()){
             loadNextDayMarket();
+            mGraphData.clear();
             return;
         }
         mlistMarket.remove(0);
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
+        mGraphData.add(deal);
+        mMinuteData = Utils.GetMinuteData(mGraphData);
     }
 
     /**

@@ -155,11 +155,12 @@ public class MyGraph extends View {
         mDrawable = drawable;
     }
 
-    public void initMinuteGraph() {
-
+    public void initMinuteGraph(float lastClose) {
+        mPainter = new MinsPainter(lastClose);
     }
 
     public void DrawMinuteGraph(List<StockDayDeal> mMinuteData) {
-
+        mPainter.Data = mMinuteData;
+        this.postInvalidate();
     }
 }

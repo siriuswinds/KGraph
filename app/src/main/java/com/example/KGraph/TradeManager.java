@@ -27,7 +27,7 @@ public class TradeManager {
         Date date = c.getTime();
         record.TradeTime = date;
         record.TurnOver = fPayNum;
-        record.TradeType = TRADETYPE.PAYINTO;
+        record.TradeType = TradeType.PAYINTO;
         dbmgr.saveTradeRecord(record);
     }
 
@@ -41,7 +41,7 @@ public class TradeManager {
         Date date = c.getTime();
         record.TradeTime = date;
         record.TurnOver = fRollOut;
-        record.TradeType = TRADETYPE.ROLLOUT;
+        record.TradeType = TradeType.ROLLOUT;
         dbmgr.saveTradeRecord(record);
     }
 

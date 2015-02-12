@@ -1,6 +1,5 @@
 package com.example.KGraph;
 
-import android.os.Message;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -13,7 +12,6 @@ import org.apache.http.util.EntityUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class Utils {
     public static String DAYURL = "http://quotes.money.163.com/service/chddata.html?code=%1$s&start=%2$s&end=%3$s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
     public final static String[] WeekName = new String[]{"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 
-    public static String TRADETYPETOSTRING(TRADETYPE tradeType) {
+    public static String TRADETYPETOSTRING(TradeType tradeType) {
         String result = "";
 
         if(tradeType != null) {
@@ -58,13 +56,13 @@ public class Utils {
         return result;
     }
 
-    public static TRADETYPE STRINGTOTRADETYPE(String tradetype) {
-        TRADETYPE result = null;
+    public static TradeType STRINGTOTRADETYPE(String tradetype) {
+        TradeType result = null;
 
-        if(tradetype.equals("转入")) result = TRADETYPE.PAYINTO;
-        if(tradetype.equals("转出")) result = TRADETYPE.ROLLOUT;
-        if(tradetype.equals("买入")) result = TRADETYPE.BUY;
-        if(tradetype.equals("卖出")) result = TRADETYPE.SELL;
+        if(tradetype.equals("转入")) result = TradeType.PAYINTO;
+        if(tradetype.equals("转出")) result = TradeType.ROLLOUT;
+        if(tradetype.equals("买入")) result = TradeType.BUY;
+        if(tradetype.equals("卖出")) result = TradeType.SELL;
 
         return result;
     }
