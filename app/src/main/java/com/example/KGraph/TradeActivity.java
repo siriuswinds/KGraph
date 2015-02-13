@@ -59,6 +59,7 @@ public class TradeActivity extends Activity {
                 case 1:
                     adapterMarket.notifyDataSetChanged();
                     updateStatics();
+                    mMinuteData = Utils.GetMinuteData(mGraphData);
                     mGraph.DrawMinuteGraph(mMinuteData);
                     break;
             }
@@ -217,7 +218,6 @@ public class TradeActivity extends Activity {
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
         mGraphData.add(deal);
-        mMinuteData = Utils.GetMinuteData(mGraphData);
         //mGraph.DrawMinuteGraph(mMinuteData);
     }
 
