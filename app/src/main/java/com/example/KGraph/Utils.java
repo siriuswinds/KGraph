@@ -19,11 +19,11 @@ import java.util.List;
  * Created by yangj on 2015/1/27.
  */
 public class Utils {
-    public static int DISPLAYINDEX = 4;
+    public static int DISPLAYINDEX = 8;
     /**
      * 更新速度
      */
-    public static int SPEED = 500;
+    public static int SPEED = 100;
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DayFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss");
@@ -104,13 +104,98 @@ public class Utils {
      * @param mdeals
      * @return
      */
-    public static List<StockDayDeal> GetMinuteData(List<StockDayDeal> mdeals) {
+    public static List<StockDayDeal> GetMinuteData(List<StockDayDeal> mdeals,Date t00) {
+        int vol = 0;
+        float price = 0;
+        List<StockDayDeal> minutedata = new ArrayList<StockDayDeal>();
+
+        try {
+            Date t1 = t00;//TimeFormatter.parse("09:30:00");
+            Date t0930 = TimeFormatter.parse("09:30:00");
+            Date t1129 = TimeFormatter.parse("11:29:00");
+            Date t1130 = TimeFormatter.parse("11:30:00");
+            Date t1131 = TimeFormatter.parse("11:31:00");
+            Date t1300 = TimeFormatter.parse("13:00:00");
+            Date t1458 = TimeFormatter.parse("14:58:00");
+            Date t1459 = TimeFormatter.parse("14:59:00");
+            Date t1500 = TimeFormatter.parse("14:59:59");
+
+            for(int i = 0;i<mdeals.size();i++) {
+                StockDayDeal deal = mdeals.get(i);
+                Date t2 = TimeFormatter.parse(deal.DealTime);
+
+                if(t2.after(t1130)&&t2.before(t1131))
+                    t2.setTime(t2.getTime()-60*1000);
+
+                if(t2.after(t1500))
+                    t2.setTime(t2.getTime()-59*1000);
+
+                long span = (t2.getTime() - t1.getTime())/(60*1000);
+
+                if(i==mdeals.size()-1){
+                    vol += deal.DealCount;
+                    StockDayDeal mdata3 = new StockDayDeal();
+                    String t = deal.DealTime.substring(0,6).concat("00");
+                    mdata3.DealTime = t;
+                    mdata3.DealCount = vol;
+                    mdata3.Price = deal.Price;
+                    minutedata.add(mdata3);
+                    continue;
+                }
+
+                if(span>=1) {
+                    StockDayDeal mdata = new StockDayDeal();
+                    mdata.DealTime = TimeFormatter.format(t1);
+                    mdata.DealCount = vol;
+                    mdata.Price = price;
+                    minutedata.add(mdata);
+                    vol = 0;
+                    //price = 0;
+
+                    if(t1.before(t1459))
+                        t1.setTime(t1.getTime() + 60 * 1000);
+
+                    if(t2.after(t1300)&& t1.before(t1300)) {
+                        t1 = t1300;
+                        span = (t2.getTime() - t1.getTime())/(60*1000);
+                    }
+
+                    if(span>=2){
+                        for(int j=1;j<span;j++){
+                            StockDayDeal mdata2 = new StockDayDeal();
+                            mdata2.DealTime = TimeFormatter.format(t1);
+                            mdata2.DealCount = vol;
+                            mdata2.Price = price;
+                            minutedata.add(mdata2);
+
+                            if(t1.before(t1459))
+                                t1.setTime(t1.getTime() + 60 * 1000);
+
+                            if(t1.after(t1458)){
+                                vol += deal.DealCount;
+                                price = deal.Price;
+                            }
+                        }
+                    }
+                }
+
+                vol += deal.DealCount;
+                price = deal.Price;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return minutedata;
+    }
+
+    public static List<StockDayDeal> GetMinuteDataEx(List<StockDayDeal> mdeals) {
         int vol = 0;
         float price = 0;
         List<StockDayDeal> minutedata = new ArrayList<StockDayDeal>();
 
         try {
             Date t1 = TimeFormatter.parse("09:30:00");
+            Date t0930 = TimeFormatter.parse("09:30:00");
             Date t1129 = TimeFormatter.parse("11:29:00");
             Date t1130 = TimeFormatter.parse("11:30:00");
             Date t1131 = TimeFormatter.parse("11:31:00");

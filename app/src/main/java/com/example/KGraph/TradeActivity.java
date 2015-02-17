@@ -59,8 +59,6 @@ public class TradeActivity extends Activity {
                 case 1:
                     adapterMarket.notifyDataSetChanged();
                     updateStatics();
-                    mMinuteData = Utils.GetMinuteData(mGraphData);
-                    mGraph.DrawMinuteGraph(mMinuteData);
                     break;
             }
         }
@@ -115,10 +113,6 @@ public class TradeActivity extends Activity {
                     initStockMarket();
                 else
                     displayMarket();
-
-                Message msg = new Message();
-                msg.what = 1;
-                mhandler.sendMessage(msg);
             }
         };
 
@@ -212,13 +206,47 @@ public class TradeActivity extends Activity {
             return;
         }
 
-        Log.d("",String.valueOf(mdisplayIndex));
-
         mlistMarket.remove(0);
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
-        mGraphData.add(deal);
-        //mGraph.DrawMinuteGraph(mMinuteData);
+
+        if(mMinuteData != null && mMinuteData.size()>1) {
+            try {
+                int size = mMinuteData.size();
+
+                Date dealtime = Utils.TimeFormatter.parse(deal.DealTime);
+                Date lasttime = Utils.TimeFormatter.parse(mMinuteData.get(size-1).DealTime);
+
+                if((dealtime.getTime() - lasttime.getTime())>60*1000)
+                    mGraphData.clear();
+
+                mGraphData.add(deal);
+
+                List<StockDayDeal> minutedata = Utils.GetMinuteData(mGraphData,lasttime);
+
+                int size2 = minutedata.size();
+
+                Date time = Utils.TimeFormatter.parse(minutedata.get(size2-1).DealTime);
+
+                if(time.compareTo(lasttime)==0)
+                    mMinuteData.set(size-1,minutedata.get(size2-1));
+                else
+                    mMinuteData.addAll(minutedata);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            mGraphData.add(deal);
+            try {
+                Date t1 =Utils.TimeFormatter.parse("09:30:00");
+                mMinuteData = Utils.GetMinuteData(mGraphData,t1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     /**
@@ -258,6 +286,10 @@ public class TradeActivity extends Activity {
         map.put("性质",deal.DealType);
 
         mlistMarket.add(map);
+
+        Message msg = new Message();
+        msg.what = 1;
+        mhandler.sendMessage(msg);
 
         if(deal.Price > mHigh) mHigh = deal.Price;
         if(deal.Price < mLow) mLow = deal.Price;

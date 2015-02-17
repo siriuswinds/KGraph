@@ -89,7 +89,7 @@ public class MinsPainter extends Painter {
     }
 
     private float getX(int i){
-        return (i+1)*((mWidth-10)/241);
+        return (i+1)*((mWidth-10)/241.0f);
     }
 
     private float getY(int i){
@@ -138,7 +138,7 @@ public class MinsPainter extends Painter {
         Deals = (List<StockDayDeal>)data;
 
         for(int i = 0;i<Deals.size();i++){
-            float diff = Math.abs(mlastClose - Deals.get(i).Price);
+            float diff = Math.abs(mlastClose - Deals.get(i).Price)*1.1f;
             maxDiff = Math.max(diff,maxDiff);
         }
     }

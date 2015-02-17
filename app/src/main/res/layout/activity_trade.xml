@@ -6,11 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
-    <com.example.KGraph.MyGraph
-        android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_gravity="top"
-        android:id="@+id/myGraph" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -30,7 +26,7 @@
             android:paddingLeft="2dp"
             android:id="@+id/txtCurrentPrice"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="--" />
         <TextView
             android:layout_width="100dp"
@@ -38,7 +34,7 @@
             android:paddingLeft="2dp"
             android:id="@+id/txtCHG"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="--" />
         <TextView
             android:layout_width="fill_parent"
@@ -46,7 +42,7 @@
             android:paddingLeft="2dp"
             android:id="@+id/txtPCHG"
             android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="--" />
     </LinearLayout>
     <LinearLayout
@@ -143,6 +139,13 @@
             android:gravity="right"
             android:text="--" />
     </LinearLayout>
+
+    <com.example.KGraph.MyGraph
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:layout_gravity="top"
+        android:id="@+id/myGraph" />
+
     <ListView android:id="@+id/marketinfo" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></ListView>
     <ListView android:id="@+id/holdstocklist" android:layout_width="fill_parent" android:layout_height="100dp"></ListView>
     <LinearLayout
