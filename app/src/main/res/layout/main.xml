@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="市场"
+        android:id="@+id/btnMarket"
+        android:layout_gravity="left|top" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="自选"
+        android:id="@+id/btnFavorite"
+        android:layout_gravity="center_horizontal|top" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="交易"
+        android:id="@+id/btnTrade"
+        android:layout_gravity="right|top" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="账户"
+        android:id="@+id/btnAccount"
+        android:layout_gravity="left|center_vertical" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="退出"
+        android:id="@+id/btnExit"
+        android:layout_gravity="left|bottom" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="设置"
+        android:id="@+id/btnSetting"
+        android:layout_gravity="right|center_vertical" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="交易记录"
+        android:id="@+id/btnTradeRecord"
+        android:layout_gravity="center" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:text="测试"
+        android:id="@+id/btnTest"
+        android:layout_gravity="center_horizontal|bottom" />
+</FrameLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="MyGraph">
+        <attr name="Text" format="string" />
+        <attr name="TextSize" format="dimension" />
+        <attr name="TextColor" format="color" />
+        <attr name="Drawable" format="color|reference" />
+    </declare-styleable>
+</resources>

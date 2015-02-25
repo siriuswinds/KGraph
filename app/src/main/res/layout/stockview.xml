@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:weightSum="1">
+    <ListView android:id="@+id/stocklist" android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_weight="1"></ListView>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:measureWithLargestChild="true"
+        android:layout_gravity="bottom"
+        android:gravity="left">
+
+        <Button android:id="@+id/btnReturn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/btnReturn"></Button>
+        <Button android:id="@+id/btnPrePage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnPrePage"></Button>
+        <Button android:id="@+id/btnNextPage" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/btnNextPage"></Button>
+        <Button android:id="@+id/btnRefresh" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/btnRefresh"></Button>
+
+        <EditText
+            android:id="@+id/txtSearchCode"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </LinearLayout>
+
+</LinearLayout>

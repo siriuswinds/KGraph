@@ -1,0 +1,184 @@
+<?xml version="1.0"   encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:MyImageView="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+    <com.example.KGraph.MyGraph
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="top"
+        android:id="@+id/myGraph" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_horizontal"
+        android:layout_gravity="top"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtDate"
+            android:gravity="center|center_vertical"
+            android:text="--" />
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtCurrentPrice"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="--" />
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtCHG"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="--" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtPCHG"
+            android:gravity="right"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="--" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="left|center_horizontal"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="center"
+            android:text="昨收" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="center"
+            android:text="今开" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="center"
+            android:text="最高" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="center"
+            android:text="最低" />
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="center"
+            android:text="成交量" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:gravity="right"
+            android:text="成交额" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_horizontal"
+        android:layout_gravity="top"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtLastClose"
+            android:gravity="center"
+            android:text="--" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtOPEN"
+            android:gravity="center"
+            android:text="--" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtHIGH"
+            android:gravity="center"
+            android:text="--" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtLOW"
+            android:gravity="center"
+            android:text="--" />
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtTURNVOLUMN"
+            android:gravity="center"
+            android:text="--" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:id="@+id/txtTURNOVER"
+            android:gravity="right"
+            android:text="--" />
+    </LinearLayout>
+    <ListView android:id="@+id/marketinfo" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></ListView>
+    <ListView android:id="@+id/holdstocklist" android:layout_width="fill_parent" android:layout_height="100dp"></ListView>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:measureWithLargestChild="true"
+        android:layout_gravity="bottom"
+        android:gravity="left"
+        android:weightSum="1">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="返回"
+            android:id="@+id/btnReturn" />
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="买入"
+            android:id="@+id/btnBuy" />
+        <EditText
+            android:id="@+id/txtPrice"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="number" />
+        <EditText
+            android:id="@+id/txtVolumn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="number" />
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="卖出"
+            android:id="@+id/btnSell" />
+    </LinearLayout>
+</LinearLayout>
