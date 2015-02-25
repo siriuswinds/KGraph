@@ -128,6 +128,19 @@ public class TradeActivity extends Activity {
         mlvMarket = (ListView)findViewById(R.id.marketinfo);
         mlistMarket = new ArrayList<Map<String, String>>();
         adapterMarket = new SimpleAdapter(this,mlistMarket,R.layout.marketinfo,new String[]{"成交时间","成交价","价格变动","成交量","成交额","性质"},new int[]{R.id.txtDealTime,R.id.txtPrice,R.id.txtPriceCHG,R.id.txtDealCount,R.id.txtDealAmount,R.id.txtDealType});
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object o, String s) {
+                if(s.equalsIgnoreCase("卖盘")) {
+                    ((TextView) view).setTextColor(Color.GREEN);
+                }
+                if(s.equalsIgnoreCase("买盘")) {
+                    ((TextView) view).setTextColor(Color.RED);
+                }
+                return false;
+            }
+        };
+        adapterMarket.setViewBinder(binder);
         mlvMarket.setAdapter(adapterMarket);
 
         mbtnReturn = (Button)findViewById(R.id.btnReturn);

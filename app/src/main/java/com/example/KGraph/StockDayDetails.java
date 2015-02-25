@@ -2,6 +2,7 @@ package com.example.KGraph;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.BasicHttpParams;
@@ -102,6 +105,19 @@ public class StockDayDetails extends Activity {
 
         list = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,list,R.layout.stockdaydetaillist,new String[]{"成交时间","成交价","价格变动","成交量","成交额","性质"},new int[]{R.id.txtDealTime,R.id.txtPrice,R.id.txtPriceCHG,R.id.txtDealCount,R.id.txtDealAmount,R.id.txtDealType});
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object o, String s) {
+                if(s.equalsIgnoreCase("卖盘")) {
+                    ((TextView) view).setTextColor(Color.GREEN);
+                }
+                if(s.equalsIgnoreCase("买盘")) {
+                    ((TextView) view).setTextColor(Color.RED);
+                }
+                return false;
+            }
+        };
+        adapter.setViewBinder(binder);
         m_stockdetaillist.setAdapter(adapter);
         initStockTransactions(mPageIndex,mLineCount);
     }
