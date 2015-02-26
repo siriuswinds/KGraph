@@ -119,6 +119,9 @@ public class TradeActivity extends Activity {
         mtimer.schedule(mtask,1,Utils.SPEED);
     }
 
+    /**
+     * 初始化界面
+     */
     private void initControls() {
         mlvHostStocks = (ListView)findViewById(R.id.holdstocklist);
         mlistHostStocks = new ArrayList<Map<String, String>>();
@@ -190,6 +193,9 @@ public class TradeActivity extends Activity {
         mGraph = (MyGraph)findViewById(R.id.myGraph);
     }
 
+    /**
+     * 初始化市场信息
+     */
     private void initStockMarket() {
         mdeals = dbmgr.queryStockDeals(mCode,mDate);
         mlistMarket.clear();
@@ -213,6 +219,9 @@ public class TradeActivity extends Activity {
         }
     }
 
+    /**
+     * 显示成交记录
+     */
     private void displayMarket() {
         ++mdisplayIndex;
 
@@ -241,10 +250,12 @@ public class TradeActivity extends Activity {
         mMinuteData.clear();
         mdisplayIndex = Utils.DISPLAYINDEX;
         Calendar c = Calendar.getInstance();
+
         try {
             Date d = Utils.DayFormatter.parse(mDate);
             c.setTime(d);
             c.add(Calendar.DATE,1);
+
             if(c.after(Calendar.getInstance())){
                 mtimer.cancel();
                 return;
@@ -256,6 +267,10 @@ public class TradeActivity extends Activity {
         initStockMarket();
     }
 
+    /**
+     * 成交记录列表
+     * @param deal
+     */
     private void addMarketItem(StockDayDeal deal) {
         HashMap<String,String> map = new HashMap<String, String>();
         map.put("成交时间", deal.DealTime);
@@ -282,6 +297,10 @@ public class TradeActivity extends Activity {
         DrawMinGraph(deal);
     }
 
+    /**
+     * 绘制分时图
+     * @param deal
+     */
     private void DrawMinGraph(StockDayDeal deal) {
         if(mMinuteData != null && mMinuteData.size()>1) {
             try {

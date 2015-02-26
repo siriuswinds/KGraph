@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 public class SettingActivity extends Activity {
     private Button btnOK;
-    private EditText txtSpeed;
+    private EditText txtSpeed,txtTradeListCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,12 +19,15 @@ public class SettingActivity extends Activity {
 
         btnOK = (Button)findViewById(R.id.btnOK);
         txtSpeed = (EditText)findViewById(R.id.txtSpeed);
+        txtTradeListCount = (EditText)findViewById(R.id.txtTradeListCount);
         txtSpeed.setText(String.valueOf(Utils.SPEED));
+        txtTradeListCount.setText(String.valueOf(Utils.TRADELISTCOUNT));
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Utils.SPEED = Integer.parseInt(String.valueOf(txtSpeed.getText()));
+                Utils.TRADELISTCOUNT = Integer.parseInt(String.valueOf(txtTradeListCount.getText()));
             }
         });
     }

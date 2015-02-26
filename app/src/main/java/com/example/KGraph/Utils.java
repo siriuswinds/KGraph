@@ -23,7 +23,8 @@ public class Utils {
     /**
      * 更新速度
      */
-    public static int SPEED = 100;
+    public static int SPEED = 200;
+    public static int TRADELISTCOUNT = 200;
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DayFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss");

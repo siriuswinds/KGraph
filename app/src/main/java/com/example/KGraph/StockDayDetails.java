@@ -37,7 +37,7 @@ public class StockDayDetails extends Activity {
     private Button mbtnNextPage;
     private Button mbtnRefresh;
     private Button mbtnReturn;
-    private int mPageIndex = 0,mLineCount = 11,mPageCount = 0;
+    private int mPageIndex = 0,mPageCount = 0;
     private String mStockCode;
     private String mTransDate;
 
@@ -54,12 +54,15 @@ public class StockDayDetails extends Activity {
         String code = bundle.getString("STOCKCODE");
         String date = bundle.getString("TRADEDATE");
         this.setTitle(code + " " + date);
+
         mStockCode = code;
         mTransDate = date;
+
         if(Integer.parseInt(code)<600000)
             code = "sz"+code;
         else
             code = "sh"+code;
+
         stockurl = String.format(stockurl,date,code);
         myHandler = new MyHandler();
         dbmgr=new DBManager(this);
@@ -72,7 +75,7 @@ public class StockDayDetails extends Activity {
             public void onClick(View view) {
                 if(mPageIndex>0){
                     --mPageIndex;
-                    loadStockTransactions(mPageIndex*mLineCount,mLineCount);
+                    loadStockTransactions(mPageIndex* Utils.TRADELISTCOUNT,Utils.TRADELISTCOUNT);
                 }
             }
         });
@@ -82,7 +85,7 @@ public class StockDayDetails extends Activity {
             public void onClick(View view) {
                 if(mPageIndex<mPageCount-1){
                     ++mPageIndex;
-                    loadStockTransactions(mPageIndex*mLineCount,mLineCount);
+                    loadStockTransactions(mPageIndex*Utils.TRADELISTCOUNT,Utils.TRADELISTCOUNT);
                 }
             }
         });
@@ -91,7 +94,7 @@ public class StockDayDetails extends Activity {
             @Override
             public void onClick(View view) {
                 dbmgr.deleteStockDayDeals(mStockCode,mTransDate);
-                initStockTransactions(mPageIndex,mLineCount);
+                initStockTransactions(mPageIndex,Utils.TRADELISTCOUNT);
             }
         });
         mbtnReturn = (Button)findViewById(R.id.btnReturn);
@@ -122,7 +125,7 @@ public class StockDayDetails extends Activity {
         };
         adapter.setViewBinder(binder);
         m_stockdetaillist.setAdapter(adapter);
-        initStockTransactions(mPageIndex,mLineCount);
+        initStockTransactions(mPageIndex,Utils.TRADELISTCOUNT);
     }
 
     private void initStockTransactions(int index,int count){
@@ -141,6 +144,7 @@ public class StockDayDetails extends Activity {
 		m_downlowdStockDayDeals = dbmgr.queryStockDeals(mStockCode,mTransDate,index,count);
 		loadStockDealList(m_downlowdStockDayDeals);
         adapter.notifyDataSetChanged();
+        m_stockdetaillist.setSelection(0);
 	}
 
 	public void loadStockDealList(List<StockDayDeal> deals){
@@ -181,13 +185,13 @@ public class StockDayDetails extends Activity {
                     mPageCount = m_downlowdStockDayDeals.size();
                 }
 
-                loadStockDealList(m_downlowdStockDayDeals.subList(mPageIndex,mLineCount));
+                loadStockDealList(m_downlowdStockDayDeals.subList(mPageIndex,Utils.TRADELISTCOUNT));
 
                 Message msg = myHandler.obtainMessage();
                 msg.what = StockDayDetails.MyHandler.FINISH_DOWNLOAD_MESSAGE;
                 myHandler.sendMessage(msg);
             }catch (Exception ex){
-                Log.e("下载分笔明细",ex.getMessage());
+                Log.e(this.getClass().getName(),ex.getMessage());
             }
         }
 	}
