@@ -137,6 +137,9 @@ public class TradeActivity extends Activity {
                 if(s.equalsIgnoreCase("买盘")) {
                     ((TextView) view).setTextColor(Color.RED);
                 }
+                if(s.equalsIgnoreCase("中性盘")) {
+                    ((TextView) view).setTextColor(Color.WHITE);
+                }
                 return false;
             }
         };
@@ -222,44 +225,6 @@ public class TradeActivity extends Activity {
         mlistMarket.remove(0);
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
-
-        if(mMinuteData != null && mMinuteData.size()>1) {
-            try {
-                int size = mMinuteData.size();
-
-                Date dealtime = Utils.TimeFormatter.parse(deal.DealTime);
-                Date lasttime = Utils.TimeFormatter.parse(mMinuteData.get(size-1).DealTime);
-
-                if((dealtime.getTime() - lasttime.getTime())>60*1000)
-                    mGraphData.clear();
-
-                mGraphData.add(deal);
-
-                List<StockDayDeal> minutedata = Utils.GetMinuteData(mGraphData,lasttime);
-
-                int size2 = minutedata.size();
-
-                Date time = Utils.TimeFormatter.parse(minutedata.get(size2-1).DealTime);
-
-                if(time.compareTo(lasttime)==0)
-                    mMinuteData.set(size-1,minutedata.get(size2-1));
-                else
-                    mMinuteData.addAll(minutedata);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }else {
-            mGraphData.add(deal);
-            try {
-                Date t1 =Utils.TimeFormatter.parse("09:30:00");
-                mMinuteData = Utils.GetMinuteData(mGraphData,t1);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-        mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     /**
@@ -311,6 +276,48 @@ public class TradeActivity extends Activity {
         mVol += deal.DealCount;
         mTurnover += deal.DealAmount;
         mChg = mCurrentPrice - mLastClose;
+
+        DrawMinGraph(deal);
+    }
+
+    private void DrawMinGraph(StockDayDeal deal) {
+        if(mMinuteData != null && mMinuteData.size()>1) {
+            try {
+                int size = mMinuteData.size();
+
+                Date dealtime = Utils.TimeFormatter.parse(deal.DealTime);
+                Date lasttime = Utils.TimeFormatter.parse(mMinuteData.get(size-1).DealTime);
+
+                if((dealtime.getTime() - lasttime.getTime())>60*1000)
+                    mGraphData.clear();
+
+                mGraphData.add(deal);
+
+                List<StockDayDeal> minutedata = Utils.GetMinuteData(mGraphData,lasttime);
+
+                int size2 = minutedata.size();
+
+                Date time = Utils.TimeFormatter.parse(minutedata.get(size2-1).DealTime);
+
+                if(time.compareTo(lasttime)==0)
+                    mMinuteData.set(size-1,minutedata.get(size2-1));
+                else
+                    mMinuteData.addAll(minutedata);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            mGraphData.add(deal);
+            try {
+                Date t1 =Utils.TimeFormatter.parse("09:30:00");
+                mMinuteData = Utils.GetMinuteData(mGraphData,t1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mGraph.DrawMinuteGraph(mMinuteData);
     }
 
     /**

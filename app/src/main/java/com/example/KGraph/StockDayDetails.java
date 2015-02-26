@@ -114,6 +114,9 @@ public class StockDayDetails extends Activity {
                 if(s.equalsIgnoreCase("买盘")) {
                     ((TextView) view).setTextColor(Color.RED);
                 }
+                if(s.equalsIgnoreCase("中性盘")) {
+                    ((TextView) view).setTextColor(Color.WHITE);
+                }
                 return false;
             }
         };
