@@ -237,6 +237,8 @@ public class TradeActivity extends Activity {
         mTurnover = 0;
 
         mdeals.clear();
+        mGraphData.clear();
+        mMinuteData.clear();
         mdisplayIndex = Utils.DISPLAYINDEX;
         Calendar c = Calendar.getInstance();
         try {

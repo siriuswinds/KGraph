@@ -157,6 +157,7 @@ public class MyGraph extends View {
 
     public void initMinuteGraph(float lastClose) {
         mPainter = new MinsPainter(lastClose);
+        this.postInvalidate();
     }
 
     public void DrawMinuteGraph(List<StockDayDeal> mMinuteData) {

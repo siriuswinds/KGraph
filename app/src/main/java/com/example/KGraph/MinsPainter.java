@@ -13,22 +13,10 @@ import java.util.List;
  * Created by yangj on 2015/2/9.
  */
 public class MinsPainter extends Painter {
-    float mlastClose,maxDiff;
+    float mlastClose,maxDiff,maxVolumn;
     List<StockDayDeal> Deals;
-    int backColor = Color.rgb(0,0,0);
-    int fallColor = Color.rgb(7,244,7);
-    int riseColor = Color.rgb(255,61,1);
-    int levelColor = Color.rgb(255,255,255);
-    int timeColor = Color.rgb(255,255,255);
     int maxDotsCount = 241;
     boolean needPaintAvgPriceLine = true;
-    Typeface topTextfont = Typeface.create("宋体",Typeface.NORMAL);
-    int topTextSize = 12;
-    int topTextColor = Color.rgb(233,233,233);
-    int topTextcodeColor = Color.rgb(185,185,0);
-    String topTextBaseLine = "top";
-    boolean topTextShow = true;
-    RectF topTextRegion;
 
     public MinsPainter(float lastClose){
         super();
@@ -52,7 +40,28 @@ public class MinsPainter extends Painter {
     }
 
     private void paintVolume(){
+        if(Deals == null||Deals.size() < 2) return;
 
+        int size = Deals.size();
+
+        Canvas.save();
+        Canvas.translate(5,(mHeight-5));
+
+        mPaint.setColor(Color.LTGRAY);
+        for(int i = 0;i<Deals.size();i++){
+            float x1 = getX(i);
+            float x2 = x1;
+            float y1 = 0;
+            float y2 = getVolumnY(i);
+            Canvas.drawLine(x1,y1,x2,y2,mPaint);
+        }
+
+        Canvas.restore();
+    }
+
+    private float getVolumnY(int i) {
+        float result = 0 - Deals.get(i).DealCount * mHeight / 3.0f / this.maxVolumn;
+        return result;
     }
 
     private void line(){
@@ -74,15 +83,15 @@ public class MinsPainter extends Painter {
         mPaint.setColor(Color.DKGRAY);
 
         //绘制水平分割
-        int h = (mHeight-10)/4;
-        for(int i =1;i<4;i++)
+        float h = (mHeight-10)/6.0f;
+        for(int i =1;i<6;i++)
         {
             Canvas.drawLine(5,i*h,mWidth-5,i*h,mPaint);
         }
 
         //绘制垂直分割
-        int v = (mWidth-10)/4;
-        for(int i=1;i<4;i++){
+        float v = (mWidth-10)/8.0f;
+        for(int i=1;i<8;i++){
             Canvas.drawLine(i*v,5,i*v,mHeight-5,mPaint);
         }
         //http://data.gtimg.cn/flashdata/hushen/minute/sh601988.js?0.5876284902915359
@@ -94,7 +103,7 @@ public class MinsPainter extends Painter {
 
     private float getY(int i){
         float diff = Deals.get(i).Price - mlastClose;
-        float result = 0 - diff * mHeight / 2 / this.maxDiff;
+        float result = 0 - diff * mHeight / 3.0f / this.maxDiff;
         return result;
     }
 
@@ -116,7 +125,7 @@ public class MinsPainter extends Painter {
         int size = Deals.size();
 
         Canvas.save();
-        Canvas.translate(5,(mHeight-10)/2);
+        Canvas.translate(5,(mHeight-5)/3);
 
         mPaint.setColor(Color.LTGRAY);
 
@@ -127,6 +136,7 @@ public class MinsPainter extends Painter {
             float y2 = getY(i);
             Canvas.drawLine(x1,y1,x2,y2,mPaint);
         }
+        Canvas.restore();
     }
 
     private void fillTopText(){
@@ -140,6 +150,8 @@ public class MinsPainter extends Painter {
         for(int i = 0;i<Deals.size();i++){
             float diff = Math.abs(mlastClose - Deals.get(i).Price)*1.1f;
             maxDiff = Math.max(diff,maxDiff);
+
+            maxVolumn = Math.max(Deals.get(i).DealCount*1.1f,maxVolumn);
         }
     }
 }

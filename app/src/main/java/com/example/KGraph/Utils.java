@@ -106,6 +106,7 @@ public class Utils {
      */
     public static List<StockDayDeal> GetMinuteData(List<StockDayDeal> mdeals,Date t00) {
         int vol = 0;
+        float amo = 0;
         float price = 0;
         List<StockDayDeal> minutedata = new ArrayList<StockDayDeal>();
 
@@ -134,10 +135,12 @@ public class Utils {
 
                 if(i==mdeals.size()-1){
                     vol += deal.DealCount;
+                    amo += deal.DealAmount;
                     StockDayDeal mdata3 = new StockDayDeal();
                     String t = deal.DealTime.substring(0,6).concat("00");
                     mdata3.DealTime = t;
                     mdata3.DealCount = vol;
+                    mdata3.DealAmount = amo;
                     mdata3.Price = deal.Price;
                     minutedata.add(mdata3);
                     continue;
@@ -147,9 +150,11 @@ public class Utils {
                     StockDayDeal mdata = new StockDayDeal();
                     mdata.DealTime = TimeFormatter.format(t1);
                     mdata.DealCount = vol;
+                    mdata.DealAmount = amo;
                     mdata.Price = price;
                     minutedata.add(mdata);
                     vol = 0;
+                    amo = 0;
                     //price = 0;
 
                     if(t1.before(t1459))
@@ -165,6 +170,7 @@ public class Utils {
                             StockDayDeal mdata2 = new StockDayDeal();
                             mdata2.DealTime = TimeFormatter.format(t1);
                             mdata2.DealCount = vol;
+                            mdata2.DealAmount = amo;
                             mdata2.Price = price;
                             minutedata.add(mdata2);
 
@@ -173,6 +179,7 @@ public class Utils {
 
                             if(t1.after(t1458)){
                                 vol += deal.DealCount;
+                                amo += deal.DealAmount;
                                 price = deal.Price;
                             }
                         }
@@ -180,6 +187,7 @@ public class Utils {
                 }
 
                 vol += deal.DealCount;
+                amo += deal.DealAmount;
                 price = deal.Price;
             }
         } catch (ParseException e) {
@@ -190,6 +198,7 @@ public class Utils {
 
     public static List<StockDayDeal> GetMinuteDataEx(List<StockDayDeal> mdeals) {
         int vol = 0;
+        float amo = 0;
         float price = 0;
         List<StockDayDeal> minutedata = new ArrayList<StockDayDeal>();
 
@@ -218,9 +227,11 @@ public class Utils {
 
                 if(i==mdeals.size()-1){
                     vol += deal.DealCount;
+                    amo += deal.DealAmount;
                     StockDayDeal mdata3 = new StockDayDeal();
                     mdata3.DealTime = TimeFormatter.format(t1);
                     mdata3.DealCount = vol;
+                    mdata3.DealAmount = amo;
                     mdata3.Price = deal.Price;
                     minutedata.add(mdata3);
                     continue;
@@ -230,9 +241,11 @@ public class Utils {
                     StockDayDeal mdata = new StockDayDeal();
                     mdata.DealTime = TimeFormatter.format(t1);
                     mdata.DealCount = vol;
+                    mdata.DealAmount = amo;
                     mdata.Price = price;
                     minutedata.add(mdata);
                     vol = 0;
+                    amo = 0;
                     //price = 0;
 
                     if(t1.before(t1459))
@@ -248,6 +261,7 @@ public class Utils {
                             StockDayDeal mdata2 = new StockDayDeal();
                             mdata2.DealTime = TimeFormatter.format(t1);
                             mdata2.DealCount = vol;
+                            mdata2.DealAmount = amo;
                             mdata2.Price = price;
                             minutedata.add(mdata2);
 
@@ -256,6 +270,7 @@ public class Utils {
 
                             if(t1.after(t1458)){
                                 vol += deal.DealCount;
+                                amo += deal.DealAmount;
                                 price = deal.Price;
                             }
                         }
@@ -263,6 +278,7 @@ public class Utils {
                 }
 
                 vol += deal.DealCount;
+                amo += deal.DealAmount;
                 price = deal.Price;
             }
         } catch (ParseException e) {
