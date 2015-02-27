@@ -1,5 +1,6 @@
 package com.example.KGraph;
 
+import android.os.Message;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -20,10 +21,12 @@ import java.util.List;
  */
 public class Utils {
     public static int DISPLAYINDEX = 8;
+    public static int DISPLAYKINDEX = 4;
     /**
      * 更新速度
      */
     public static int SPEED = 200;
+    public static int KSPEED = 2000;
     public static int TRADELISTCOUNT = 200;
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat DayFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -66,6 +69,30 @@ public class Utils {
         if(tradetype.equals("卖出")) result = TradeType.SELL;
 
         return result;
+    }
+
+    public static List<StockDay> downloadDay(DBManager dbmgr,String code,String date){
+        List<StockDay> mlists = new ArrayList<StockDay>();
+        HttpGet httpGet = new HttpGet(Utils.DAYURL);
+        HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, 60000);
+        httpGet.setParams(params);
+
+        try
+        {
+            HttpResponse httpResponse = HttpClientHelper.getHttpClient().execute(httpGet);
+            String result = EntityUtils.toString(httpResponse.getEntity(), "GB2312");
+
+            if(result != null){
+                mlists = StockDay.parse(result);
+                if(mlists.size()>0) {
+                    dbmgr.addStockDay(mlists);
+                }
+            }
+        }catch (Exception ex){
+            Log.e("下载日线数据",ex.getMessage());
+        }
+        return mlists;
     }
 
     public static List<StockDayDeal> downloadDayDeals(DBManager dbmgr, String code, String date) {

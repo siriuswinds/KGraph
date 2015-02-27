@@ -160,10 +160,29 @@ public class MyGraph extends View {
         this.postInvalidate();
     }
 
+    /**
+     * 绘制分时图
+     * @param mMinuteData
+     */
     public void DrawMinuteGraph(List<StockDayDeal> mMinuteData) {
         if(mMinuteData==null||mMinuteData.size()==0)return;
 
         mPainter.setData(mMinuteData);
         this.postInvalidate();
+    }
+
+    /**
+     * 绘制K线图
+     * @param mKDatas
+     */
+    public void DrawKGraph(List<StockDay> mKDatas) {
+        if(mKDatas == null||mKDatas.size()==0)return;
+
+        mPainter.setData(mKDatas);
+        this.postInvalidate();
+    }
+
+    public void initKGraph(float mLastClose) {
+
     }
 }

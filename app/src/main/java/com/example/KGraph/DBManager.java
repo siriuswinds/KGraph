@@ -195,9 +195,18 @@ public class DBManager {
      */
     public List<StockDay> queryStockDay(String code,String startdate,String enddate){
         ArrayList<StockDay> stocks = new ArrayList<StockDay>();
-        Cursor c = queryTheCursor(code,startdate,enddate);
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        Cursor c = db.rawQuery("select * from STOCKDAY where CODE=? and transdate>=date(?) and transdate<=date(?) order by transdate desc", new String[]{code, startdate, enddate});
+        parseStockDayCursor(c,stocks);
+        c.close();
+        return stocks;
+    }
 
+    /**
+     * 格式化StockDay对象数据
+     * @param c
+     * @param stocks
+     */
+    private void parseStockDayCursor(Cursor c, ArrayList<StockDay> stocks) {
         while (c.moveToNext()){
             StockDay stock = new StockDay();
 
@@ -218,6 +227,12 @@ public class DBManager {
             stock.MCAP =  c.getFloat(c.getColumnIndex("MCAP"));
             stocks.add(stock);
         }
+    }
+
+    public List<StockDay> queryStockDay(String code, String startdate) {
+        ArrayList<StockDay> stocks = new ArrayList<StockDay>();
+        Cursor c = db.rawQuery("select * from STOCKDAY where CODE=? and transdate>=date(?) order by transdate asc", new String[]{code, startdate});
+        parseStockDayCursor(c,stocks);
         c.close();
         return stocks;
     }

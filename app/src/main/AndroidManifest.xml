@@ -50,6 +50,10 @@
             android:label="@string/title_activity_trade" >
         </activity>
         <activity
+            android:name=".TradeKActivity"
+            android:label="@string/title_activity_trade" >
+        </activity>
+        <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test" >
         </activity>

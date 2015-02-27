@@ -2,6 +2,7 @@ package com.example.KGraph;
 
 import android.app.*;
 import android.content.*;
+import android.graphics.Color;
 import android.os.*;
 import android.util.Log;
 import android.view.*;
@@ -72,6 +73,32 @@ public class StockDayList extends Activity{
 
         list = new ArrayList<Map<String, String>>();
         adapter = new SimpleAdapter(this,list,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW","TURNOVER","VATURNOVER"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtTURNOVER,R.id.txtVATURNOVER});
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder(){
+            @Override
+            public boolean setViewValue(View view, Object o, String s) {
+                int length = s.length();
+                if(s.substring(length-1).equalsIgnoreCase("%")){
+                    TableRow row = (TableRow)view.getParent();
+                    TextView txt = (TextView)row.getChildAt(1);
+
+                    String val2 = s.substring(0,length-1);
+                    if(Float.parseFloat(val2)>0){
+                        ((TextView) view).setTextColor(Color.RED);
+                        txt.setTextColor(Color.RED);
+                    }
+                    if(Float.parseFloat(val2)==0) {
+                        ((TextView) view).setTextColor(Color.WHITE);
+                        txt.setTextColor(Color.WHITE);
+                    }
+                    if(Float.parseFloat(val2)<0) {
+                        ((TextView) view).setTextColor(Color.GREEN);
+                        txt.setTextColor(Color.GREEN);
+                    }
+                }
+                return false;
+            }
+        };
+        adapter.setViewBinder(binder);
 		m_stockdaylist.setAdapter(adapter);
 
         mbtnPreYear = (Button)findViewById(R.id.btnPreYear);
@@ -83,6 +110,7 @@ public class StockDayList extends Activity{
                     --mYearIndex;
                     loadStockDays();
                     adapter.notifyDataSetChanged();
+                    m_stockdaylist.setSelection(0);
                 }
             }
         });
@@ -93,6 +121,7 @@ public class StockDayList extends Activity{
                     ++mYearIndex;
                     loadStockDays();
                     adapter.notifyDataSetChanged();
+                    m_stockdaylist.setSelection(list.size()-1);
                 }
             }
         });
@@ -142,7 +171,8 @@ public class StockDayList extends Activity{
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo){
         menu.add(0,1,0,"分笔明细");
-        menu.add(0,2,0,"模拟交易");
+        menu.add(0,2,0,"模拟时");
+        menu.add(0,3,0,"模拟天");
         super.onCreateContextMenu(menu,v,menuInfo);
     }
 
@@ -159,7 +189,10 @@ public class StockDayList extends Activity{
                 openStockDayDetials(date);
                 break;
             case 2:
-                startStockTrade(date,lclose);
+                startStockTrade(date,lclose,0);
+                break;
+            case 3:
+                startStockTrade(date,lclose,1);
                 break;
         }
         return super.onContextItemSelected(mi);
@@ -169,13 +202,20 @@ public class StockDayList extends Activity{
      * 开始模拟交易
      * @param date
      */
-    private void startStockTrade(String date,String lclose) {
+    private void startStockTrade(String date,String lclose,int type) {
         Intent intent = new Intent();
-        intent.setClass(StockDayList.this,TradeActivity.class);
+
+        if(type == 0)
+            intent.setClass(StockDayList.this,TradeActivity.class);
+
+        if(type == 1)
+            intent.setClass(StockDayList.this,TradeKActivity.class);
+
         Bundle bundle = new Bundle();
         bundle.putString("STOCKCODE",stockcode);
         bundle.putString("TRADEDATE",date);
         bundle.putString("LCLOSE",lclose);
+        bundle.putString("TYPE",String.valueOf(type));
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -255,7 +295,7 @@ public class StockDayList extends Activity{
             map.put("TOPEN",String.format("%.2f",stock.TOPEN));
             map.put("HIGH",String.format("%.2f",stock.HIGH));
             map.put("LOW",String.format("%.2f",stock.LOW));
-            map.put("TURNOVER",String.format("%.2f",stock.TURNOVER).concat("%"));
+            map.put("TURNOVER",String.format("%.2f",stock.TURNOVER));//.concat("%"));
             map.put("VATURNOVER",String.format("%.2f",stock.VATURNOVER/100000000));//亿元
             //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
             //TURNOVER;VOTURNOVER;VATURNOVER

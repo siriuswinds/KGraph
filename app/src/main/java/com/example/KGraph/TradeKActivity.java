@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TableRow;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -28,13 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 
-public class TradeActivity extends Activity {
+public class TradeKActivity extends Activity {
     private Button mbtnReturn,mbtnBuy,mbtnSell;
-    private com.example.KGraph.MyGraph mGraph;
+    private MyGraph mGraph;
     private EditText mtxtPrice,mtxtVolumn;
     private ListView mlvHostStocks,mlvMarket;
     private TextView mtxtLastClose,mtxtOpen,mtxtHigh,mtxtLow,mtxtTurnVolumn,mtxtTurnOver,mtxtCHG,mtxtPCHG,mtxtCurrentPrice,mtxtDate;
@@ -46,9 +41,9 @@ public class TradeActivity extends Activity {
     private TimerTask mtask;
     private String mCode;
     private String mDate;
-    private List<StockDayDeal> mdeals,mMinuteData,mGraphData;
-    private int mdisplayIndex = Utils.DISPLAYINDEX;
-    private float mLastClose,mOpen,mHigh,mLow,mChg,mVol,mTurnover,mCurrentPrice;
+    private List<StockDay> mlists,mKDatas,mGraphData;
+    private int mdisplayIndex = Utils.DISPLAYKINDEX;
+    private float mLastClose,mOpen,mHigh,mLow,mChg,mPchg,mVol,mTurnover,mCurrentPrice;
     private boolean canStopTimer = true;
     private int SimulateType;
 
@@ -76,7 +71,7 @@ public class TradeActivity extends Activity {
         mtxtDate.setText(mDate);
         mtxtCurrentPrice.setText(String.format("%1$.2f",mCurrentPrice));
         mtxtCHG.setText(String.format("%1$.2f", mChg));
-        mtxtPCHG.setText(String.format("%1$.2f",mChg*100/mLastClose).concat("%"));
+        mtxtPCHG.setText(String.format("%1$.2f",mPchg).concat("%"));
 
         if(mChg >  0) setStaticsColor(Color.RED);
         if(mChg <  0) setStaticsColor(Color.GREEN);
@@ -99,26 +94,25 @@ public class TradeActivity extends Activity {
         mCode = bundle.getString("STOCKCODE");
         mDate = bundle.getString("TRADEDATE");
         mLastClose = Float.parseFloat(bundle.getString("LCLOSE"));
-        SimulateType = Integer.parseInt(bundle.getString("TYPE"));
 
         mtimer = new Timer();
         dbmgr = new DBManager(this);
         trademgr = new TradeManager(dbmgr);
-        mGraphData = new ArrayList<StockDayDeal>();
+        mGraphData = new ArrayList<StockDay>();
         initControls();
         initHoldStocks();
 
         mtask = new TimerTask() {
             @Override
             public void run() {
-                if(mdeals == null || (mdisplayIndex == Utils.DISPLAYINDEX && mdeals.size()==0))
+                if(mlists == null || (mdisplayIndex == Utils.DISPLAYKINDEX && mlists.size()==0))
                     initStockMarket();
                 else
                     displayMarket();
             }
         };
 
-        mtimer.schedule(mtask,1,Utils.SPEED);
+        mtimer.schedule(mtask,1,Utils.KSPEED);
     }
 
     /**
@@ -132,18 +126,28 @@ public class TradeActivity extends Activity {
 
         mlvMarket = (ListView)findViewById(R.id.marketinfo);
         mlistMarket = new ArrayList<Map<String, String>>();
-        adapterMarket = new SimpleAdapter(this,mlistMarket,R.layout.marketinfo,new String[]{"成交时间","成交价","价格变动","成交量","成交额","性质"},new int[]{R.id.txtDealTime,R.id.txtPrice,R.id.txtPriceCHG,R.id.txtDealCount,R.id.txtDealAmount,R.id.txtDealType});
-        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
+        adapterMarket = new SimpleAdapter(this,mlistMarket,R.layout.stockdaylist,new String[]{"date","week","tclose","chg","pchg","TOPEN","HIGH","LOW","TURNOVER","VATURNOVER"},new int[]{R.id.txtDate,R.id.txtWeek,R.id.txtTCLOSE,R.id.txtCHG,R.id.txtPCHG,R.id.txtTOPEN,R.id.txtHIGH,R.id.txtLOW,R.id.txtTURNOVER,R.id.txtVATURNOVER});
+        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder(){
             @Override
             public boolean setViewValue(View view, Object o, String s) {
-                if(s.equalsIgnoreCase("卖盘")) {
-                    ((TextView) view).setTextColor(Color.GREEN);
-                }
-                if(s.equalsIgnoreCase("买盘")) {
-                    ((TextView) view).setTextColor(Color.RED);
-                }
-                if(s.equalsIgnoreCase("中性盘")) {
-                    ((TextView) view).setTextColor(Color.WHITE);
+                int length = s.length();
+                if(s.substring(length-1).equalsIgnoreCase("%")){
+                    TableRow row = (TableRow)view.getParent();
+                    TextView txt = (TextView)row.getChildAt(1);
+
+                    String val2 = s.substring(0,length-1);
+                    if(Float.parseFloat(val2)>0){
+                        ((TextView) view).setTextColor(Color.RED);
+                        txt.setTextColor(Color.RED);
+                    }
+                    if(Float.parseFloat(val2)==0) {
+                        ((TextView) view).setTextColor(Color.WHITE);
+                        txt.setTextColor(Color.WHITE);
+                    }
+                    if(Float.parseFloat(val2)<0) {
+                        ((TextView) view).setTextColor(Color.GREEN);
+                        txt.setTextColor(Color.GREEN);
+                    }
                 }
                 return false;
             }
@@ -199,27 +203,25 @@ public class TradeActivity extends Activity {
      * 初始化市场信息
      */
     private void initStockMarket() {
-        mdeals = dbmgr.queryStockDeals(mCode,mDate);
+        Calendar c = Calendar.getInstance();
+        try {
+            Date d = Utils.DayFormatter.parse(mDate);
+            c.setTime(d);
+            c.add(Calendar.DATE,-10);
+            mDate = Utils.DayFormatter.format(c.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mlists = dbmgr.queryStockDay(mCode, mDate);
         mlistMarket.clear();
 
-        if(mdeals.size()==0){
-            canStopTimer = false;
-            mdeals = Utils.downloadDayDeals(dbmgr,mCode,mDate);
-            canStopTimer = true;
-        }
-
-        if(mdeals.size()==0) {
-            loadNextDayMarket();
-            return;
-        }
-
         for(int i = 0;i<mdisplayIndex;i++){
-            StockDayDeal deal = mdeals.get(i);
-            addMarketItem(deal);
+            StockDay stock = mlists.get(i);
+            addMarketItem(stock);
 
             if(i == 0) {
-                mCurrentPrice = mHigh = mLow = mOpen = deal.Price;
-                mGraph.initMinuteGraph(mLastClose);
+                mCurrentPrice = mHigh = mLow = mOpen = stock.TOPEN;
+                mGraph.initKGraph(mLastClose);
             }
         }
     }
@@ -230,120 +232,68 @@ public class TradeActivity extends Activity {
     private void displayMarket() {
         ++mdisplayIndex;
 
-        if(mdisplayIndex == mdeals.size()){
-            loadNextDayMarket();
-            mGraphData.clear();
-            return;
-        }
-
-        mlistMarket.remove(0);
-        StockDayDeal deal = mdeals.get(mdisplayIndex);
-        addMarketItem(deal);
+        if(mdisplayIndex < mlists.size()){
+            mlistMarket.remove(0);
+            StockDay stock = mlists.get(mdisplayIndex);
+            addMarketItem(stock);
+        }else
+            stopTask();
     }
 
     /**
      * 读取下一天分笔数据
      */
     private void loadNextDayMarket() {
-        mLastClose = mCurrentPrice;
-        //mCurrentPrice = 0;
-        mVol = 0;
-        mTurnover = 0;
 
-        mdeals.clear();
-        mGraphData.clear();
-        mMinuteData.clear();
-        mdisplayIndex = Utils.DISPLAYINDEX;
-        Calendar c = Calendar.getInstance();
-
-        try {
-            Date d = Utils.DayFormatter.parse(mDate);
-            c.setTime(d);
-            c.add(Calendar.DATE,1);
-
-            if(c.after(Calendar.getInstance())){
-                mtimer.cancel();
-                return;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        mDate = Utils.DayFormatter.format(c.getTime());
-        initStockMarket();
     }
 
     /**
      * 成交记录列表
-     * @param deal
+     * @param stock
      */
-    private void addMarketItem(StockDayDeal deal) {
+    private void addMarketItem(StockDay stock) {
         HashMap<String,String> map = new HashMap<String, String>();
-        map.put("成交时间", deal.DealTime);
-        map.put("成交价", String.format("%1$.2f", deal.Price));
-        map.put("价格变动",deal.PriceChange);
-        map.put("成交量",String.valueOf(deal.DealCount));
-        map.put("成交额",String.format("%1$.2f", deal.DealAmount / 10000.0));
-        map.put("性质",deal.DealType);
-
+        map.put("date", stock.TRANSDATE);
+        try {
+            Date dt = Utils.DayFormatter.parse(stock.TRANSDATE);
+            Calendar c = Calendar.getInstance();
+            c.setTime(dt);
+            int week = c.get(Calendar.DAY_OF_WEEK);
+            map.put("week",Utils.WeekName[week-1]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        map.put("tclose",String.format("%.2f",stock.TCLOSE));
+        map.put("chg",String.format("%.2f",stock.CHG));
+        map.put("pchg",String.format("%1$.2f",stock.PCHG).concat("%"));
+        map.put("TOPEN",String.format("%.2f",stock.TOPEN));
+        map.put("HIGH",String.format("%.2f",stock.HIGH));
+        map.put("LOW",String.format("%.2f",stock.LOW));
+        map.put("TURNOVER",String.format("%.2f",stock.TURNOVER));//.concat("%"));
+        map.put("VATURNOVER",String.format("%.2f",stock.VATURNOVER/100000000));//亿元
+        //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
+        //TURNOVER;VOTURNOVER;VATURNOVER
         mlistMarket.add(map);
 
         Message msg = new Message();
         msg.what = 1;
         mhandler.sendMessage(msg);
 
-        if(deal.Price > mHigh) mHigh = deal.Price;
-        if(deal.Price < mLow) mLow = deal.Price;
+        mDate = stock.TRANSDATE;
+        mHigh = stock.HIGH;
+        mLow = stock.LOW;
+        mLastClose = stock.LCLOSE;
+        mCurrentPrice = stock.TCLOSE;
+        mVol = stock.VOTURNOVER;
+        mTurnover = stock.VATURNOVER;
+        mChg = stock.CHG;
+        mPchg = stock.PCHG;
 
-        mCurrentPrice = deal.Price;
-        mVol += deal.DealCount;
-        mTurnover += deal.DealAmount;
-        mChg = mCurrentPrice - mLastClose;
-
-        DrawMinGraph(deal);
+        DrawKGraph(stock);
     }
 
-    /**
-     * 绘制分时图
-     * @param deal
-     */
-    private void DrawMinGraph(StockDayDeal deal) {
-        if(mMinuteData != null && mMinuteData.size()>1) {
-            try {
-                int size = mMinuteData.size();
-
-                Date dealtime = Utils.TimeFormatter.parse(deal.DealTime);
-                Date lasttime = Utils.TimeFormatter.parse(mMinuteData.get(size-1).DealTime);
-
-                if((dealtime.getTime() - lasttime.getTime())>60*1000)
-                    mGraphData.clear();
-
-                mGraphData.add(deal);
-
-                List<StockDayDeal> minutedata = Utils.GetMinuteData(mGraphData,lasttime);
-
-                int size2 = minutedata.size();
-
-                Date time = Utils.TimeFormatter.parse(minutedata.get(size2-1).DealTime);
-
-                if(time.compareTo(lasttime)==0)
-                    mMinuteData.set(size-1,minutedata.get(size2-1));
-                else
-                    mMinuteData.addAll(minutedata);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }else {
-            mGraphData.add(deal);
-            try {
-                Date t1 =Utils.TimeFormatter.parse("09:30:00");
-                mMinuteData = Utils.GetMinuteData(mGraphData,t1);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-        mGraph.DrawMinuteGraph(mMinuteData);
+    private void DrawKGraph(StockDay stock) {
+        mGraph.DrawKGraph(mKDatas);
     }
 
     /**
@@ -389,7 +339,11 @@ public class TradeActivity extends Activity {
 
     public void onDestroy(){
         Log.d(this.getLocalClassName(),"退出清理");
+        stopTask();
+        super.onDestroy();
+    }
 
+    private void stopTask() {
         if(mtimer != null) {
             while(canStopTimer){
                 mtimer.cancel();
@@ -397,7 +351,5 @@ public class TradeActivity extends Activity {
                 canStopTimer = false;
             }
         }
-
-        super.onDestroy();
     }
 }
