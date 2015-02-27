@@ -206,7 +206,10 @@ public class TradeActivity extends Activity {
             canStopTimer = true;
         }
 
-        if(mdeals.size()==0) return;
+        if(mdeals.size()==0) {
+            loadNextDayMarket();
+            return;
+        }
 
         for(int i = 0;i<mdisplayIndex;i++){
             StockDayDeal deal = mdeals.get(i);
@@ -241,7 +244,7 @@ public class TradeActivity extends Activity {
      */
     private void loadNextDayMarket() {
         mLastClose = mCurrentPrice;
-        mCurrentPrice = 0;
+        //mCurrentPrice = 0;
         mVol = 0;
         mTurnover = 0;
 
