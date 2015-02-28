@@ -41,7 +41,7 @@ public class TradeKActivity extends Activity {
     private TimerTask mtask;
     private String mCode;
     private String mDate;
-    private List<StockDay> mlists,mKDatas,mGraphData;
+    private List<StockDay> mlists,mGraphData;
     private int mdisplayIndex = Utils.DISPLAYKINDEX;
     private float mLastClose,mOpen,mHigh,mLow,mChg,mPchg,mVol,mTurnover,mCurrentPrice;
     private boolean canStopTimer = true;
@@ -99,6 +99,7 @@ public class TradeKActivity extends Activity {
         dbmgr = new DBManager(this);
         trademgr = new TradeManager(dbmgr);
         mGraphData = new ArrayList<StockDay>();
+
         initControls();
         initHoldStocks();
 
@@ -207,7 +208,7 @@ public class TradeKActivity extends Activity {
         try {
             Date d = Utils.DayFormatter.parse(mDate);
             c.setTime(d);
-            c.add(Calendar.DATE,-10);
+            c.add(Calendar.DATE,-Utils.DISPLAYKINDEX);
             mDate = Utils.DayFormatter.format(c.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
@@ -234,17 +235,16 @@ public class TradeKActivity extends Activity {
 
         if(mdisplayIndex < mlists.size()){
             mlistMarket.remove(0);
+            mGraphData.remove(0);
+
+            Message msg = new Message();
+            msg.what = 1;
+            mhandler.sendMessage(msg);
+
             StockDay stock = mlists.get(mdisplayIndex);
             addMarketItem(stock);
         }else
             stopTask();
-    }
-
-    /**
-     * 读取下一天分笔数据
-     */
-    private void loadNextDayMarket() {
-
     }
 
     /**
@@ -274,6 +274,7 @@ public class TradeKActivity extends Activity {
         //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
         //TURNOVER;VOTURNOVER;VATURNOVER
         mlistMarket.add(map);
+        mGraphData.add(stock);
 
         Message msg = new Message();
         msg.what = 1;
@@ -289,11 +290,11 @@ public class TradeKActivity extends Activity {
         mChg = stock.CHG;
         mPchg = stock.PCHG;
 
-        DrawKGraph(stock);
+        DrawKGraph();
     }
 
-    private void DrawKGraph(StockDay stock) {
-        mGraph.DrawKGraph(mKDatas);
+    private void DrawKGraph() {
+        mGraph.DrawKGraph(mGraphData);
     }
 
     /**

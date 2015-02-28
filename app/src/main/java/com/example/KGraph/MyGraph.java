@@ -183,6 +183,6 @@ public class MyGraph extends View {
     }
 
     public void initKGraph(float mLastClose) {
-
+        mPainter = new KPainter();
     }
 }

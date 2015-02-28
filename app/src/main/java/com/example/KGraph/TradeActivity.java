@@ -237,6 +237,11 @@ public class TradeActivity extends Activity {
         }
 
         mlistMarket.remove(0);
+
+        Message msg = new Message();
+        msg.what = 1;
+        mhandler.sendMessage(msg);
+
         StockDayDeal deal = mdeals.get(mdisplayIndex);
         addMarketItem(deal);
     }

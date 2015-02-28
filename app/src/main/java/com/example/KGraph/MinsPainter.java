@@ -60,7 +60,7 @@ public class MinsPainter extends Painter {
     }
 
     private float getVolumnY(int i) {
-        float result = 0 - Deals.get(i).DealCount * mHeight / 3.0f / this.maxVolumn;
+        float result = 0 - Deals.get(i).DealCount * (mHeight-10) / 3.0f / this.maxVolumn;
         return result;
     }
 
@@ -103,7 +103,7 @@ public class MinsPainter extends Painter {
 
     private float getY(int i){
         float diff = Deals.get(i).Price - mlastClose;
-        float result = 0 - diff * mHeight / 3.0f / this.maxDiff;
+        float result = 0 - diff * (mHeight-10) / 3.0f / this.maxDiff;
         return result;
     }
 
@@ -125,7 +125,7 @@ public class MinsPainter extends Painter {
         int size = Deals.size();
 
         Canvas.save();
-        Canvas.translate(5,(mHeight-5)/3);
+        Canvas.translate(5,5+(mHeight-10)/3);
 
         mPaint.setColor(Color.LTGRAY);
 
