@@ -215,8 +215,11 @@ public class TradeKActivity extends Activity {
         }
         mlists = dbmgr.queryStockDay(mCode, mDate);
         mlistMarket.clear();
+        Message msg = new Message();
+        msg.what = 1;
+        mhandler.sendMessage(msg);
 
-        for(int i = 0;i<mdisplayIndex;i++){
+        for(int i = 0;i<mdisplayIndex&&i<mlists.size();i++){
             StockDay stock = mlists.get(i);
             addMarketItem(stock);
 
@@ -235,12 +238,10 @@ public class TradeKActivity extends Activity {
 
         if(mdisplayIndex < mlists.size()){
             mlistMarket.remove(0);
-            mGraphData.remove(0);
-
             Message msg = new Message();
             msg.what = 1;
             mhandler.sendMessage(msg);
-
+            mGraphData.remove(0);
             StockDay stock = mlists.get(mdisplayIndex);
             addMarketItem(stock);
         }else
@@ -274,11 +275,12 @@ public class TradeKActivity extends Activity {
         //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
         //TURNOVER;VOTURNOVER;VATURNOVER
         mlistMarket.add(map);
-        mGraphData.add(stock);
 
         Message msg = new Message();
         msg.what = 1;
         mhandler.sendMessage(msg);
+
+        mGraphData.add(stock);
 
         mDate = stock.TRANSDATE;
         mHigh = stock.HIGH;
@@ -312,8 +314,8 @@ public class TradeKActivity extends Activity {
             map.put("volumn",String.format("%1$.0f",stock.TurnVolumn));
             map.put("share","");
             mlistHostStocks.add(map);
+            adapterHoldStocks.notifyDataSetChanged();
         }
-        adapterHoldStocks.notifyDataSetChanged();
     }
 
     @Override

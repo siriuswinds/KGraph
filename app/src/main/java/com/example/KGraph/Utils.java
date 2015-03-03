@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class Utils {
     public static int DISPLAYINDEX = 8;
-    public static int DISPLAYKINDEX = 40;
+    public static int DISPLAYKINDEX = 30;
     /**
      * 更新速度
      */
