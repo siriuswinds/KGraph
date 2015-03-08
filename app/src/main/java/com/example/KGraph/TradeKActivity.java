@@ -215,6 +215,7 @@ public class TradeKActivity extends Activity {
         }
         mlists = dbmgr.queryStockDay(mCode, mDate);
         mlistMarket.clear();
+        Log.d(this.getLocalClassName(),"initStockMarket");
         Message msg = new Message();
         msg.what = 1;
         mhandler.sendMessage(msg);
@@ -238,6 +239,7 @@ public class TradeKActivity extends Activity {
 
         if(mdisplayIndex < mlists.size()){
             mlistMarket.remove(0);
+            Log.d(this.getLocalClassName(),"displayMarket");
             Message msg = new Message();
             msg.what = 1;
             mhandler.sendMessage(msg);
@@ -275,11 +277,10 @@ public class TradeKActivity extends Activity {
         //map.put("LCLOSE",String.format("%.2f",stock.LCLOSE));
         //TURNOVER;VOTURNOVER;VATURNOVER
         mlistMarket.add(map);
-
+        Log.d(this.getLocalClassName(),"addMarketItem");
         Message msg = new Message();
         msg.what = 1;
         mhandler.sendMessage(msg);
-
         mGraphData.add(stock);
 
         mDate = stock.TRANSDATE;
@@ -305,6 +306,7 @@ public class TradeKActivity extends Activity {
     private void initHoldStocks() {
         List<TradeRecord> stocks = trademgr.getHoldStocks();
         mlistHostStocks.clear();
+        adapterHoldStocks.notifyDataSetChanged();
         for (TradeRecord stock:stocks){
             HashMap<String,String> map = new HashMap<String, String>();
             map.put("code", stock.Code);

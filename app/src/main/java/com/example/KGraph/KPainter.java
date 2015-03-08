@@ -13,6 +13,7 @@ public class KPainter extends Painter {
     List<StockDay> mKDatas;
     float maxPrice,minPrice,maxVolumn;
     int maxDotsCount = 40;
+    float barwidth = 8.0f;
 
     @Override
     public void paint(){
@@ -39,24 +40,24 @@ public class KPainter extends Painter {
             float high = getY(stock.HIGH);
             float open = getY(stock.TOPEN);
             float close = getY(stock.TCLOSE);
-            float width = 8.0f;
+
 
             if(stock.TCLOSE > stock.TOPEN){
                 mPaint.setColor(Color.RED);
                 mPaint.setStyle(Paint.Style.FILL);
-                Canvas.drawRect(x1-width/2.0f,close,x1+width/2.0f,open,mPaint);
+                Canvas.drawRect(x1-barwidth/2.0f,close,x1+barwidth/2.0f,open,mPaint);
             }
             //if(stock.TOPEN < stock.LCLOSE) mPaint.setColor(Color.GREEN);
             if(stock.TCLOSE < stock.TOPEN) {
                 mPaint.setColor(Color.GREEN);
                 mPaint.setStyle(Paint.Style.FILL);
-                Canvas.drawRect(x1-width/2.0f,open,x1+width/2.0f,close,mPaint);
+                Canvas.drawRect(x1-barwidth/2.0f,open,x1+barwidth/2.0f,close,mPaint);
             }
             if(stock.TOPEN == stock.TCLOSE) {
                 mPaint.setColor(Color.WHITE);
                 //mPaint.setStyle(Paint.Style.FILL);
                 //Canvas.drawRect(x1-width/2.0f,open,x1+width/2.0f,close,mPaint);
-                Canvas.drawLine(x1-width/2.0f,open,x1+width/2.0f,close,mPaint);
+                Canvas.drawLine(x1-barwidth/2.0f,open,x1+barwidth/2.0f,close,mPaint);
             }
 
             Canvas.drawLine(x1,low,x2,high,mPaint);
@@ -109,11 +110,29 @@ public class KPainter extends Painter {
 
         mPaint.setColor(Color.LTGRAY);
         for(int i = 0;i<mKDatas.size();i++){
+            StockDay stock = mKDatas.get(i);
             float x1 = getX(i);
             float x2 = x1;
             float y1 = 0;
             float y2 = getVolumnY(i);
-            Canvas.drawLine(x1,y1,x2,y2,mPaint);
+            //Canvas.drawLine(x1,y1,x2,y2,mPaint);
+
+            if(stock.TCLOSE > stock.TOPEN){
+                mPaint.setColor(Color.RED);
+                mPaint.setStyle(Paint.Style.FILL);
+                Canvas.drawRect(x1-barwidth/2.0f,y2,x1+barwidth/2.0f,y1,mPaint);
+            }
+            //if(stock.TOPEN < stock.LCLOSE) mPaint.setColor(Color.GREEN);
+            if(stock.TCLOSE < stock.TOPEN) {
+                mPaint.setColor(Color.GREEN);
+                mPaint.setStyle(Paint.Style.FILL);
+                Canvas.drawRect(x1-barwidth/2.0f,y2,x1+barwidth/2.0f,y1,mPaint);
+            }
+            if(stock.TOPEN == stock.TCLOSE) {
+                mPaint.setColor(Color.WHITE);
+                mPaint.setStyle(Paint.Style.STROKE);
+                Canvas.drawRect(x1-barwidth/2.0f,y2,x1+barwidth/2.0f,y1,mPaint);
+            }
         }
 
         Canvas.restore();
@@ -137,14 +156,14 @@ public class KPainter extends Painter {
         maxVolumn = 0;
 
         for(int i = 0;i<mKDatas.size();i++){
-            maxPrice = Math.max(mKDatas.get(i).TCLOSE*1.03f,maxPrice);
+            maxPrice = Math.max(mKDatas.get(i).TCLOSE*1.035f,maxPrice);
 
             if(i==0)
-                minPrice = mKDatas.get(i).TCLOSE*0.97f;
+                minPrice = mKDatas.get(i).TCLOSE*0.965f;
             else
-                minPrice = Math.min(mKDatas.get(i).TCLOSE*0.97f,minPrice);
+                minPrice = Math.min(mKDatas.get(i).TCLOSE*0.965f,minPrice);
 
-            maxVolumn = Math.max(mKDatas.get(i).VOTURNOVER*1.03f,maxVolumn);
+            maxVolumn = Math.max(mKDatas.get(i).VOTURNOVER*1.035f,maxVolumn);
         }
     }
 }
